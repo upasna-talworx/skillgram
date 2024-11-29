@@ -338,7 +338,7 @@ export default function Signup({
           <div className="ml-auto mr-auto mt-0 flex w-full max-w-xl flex-col px-4 pt-6 sm:px-16 md:px-20 lg:mt-24 2xl:px-28">
             {displayBackButton && (
               <div className="flex w-fit lg:-mt-12">
-                <Button
+                <Button //back button
                   color="minimal"
                   className="hover:bg-subtle todesktop:mt-10 mb-6 flex h-6 max-h-6 w-full items-center rounded-md px-3 py-2"
                   StartIcon="arrow-left"
@@ -375,15 +375,18 @@ export default function Signup({
                   handleSubmit={async (values) => {
                     let updatedValues = values;
                     if (!formMethods.getValues().username && isOrgInviteByLink && orgAutoAcceptEmail) {
+                      // if there is no email but orgInvite is true and orgauctoaccept email is true
+                      // username is taken from email
                       updatedValues = {
                         ...values,
                         username: getOrgUsernameFromEmail(values.email, orgAutoAcceptEmail),
                       };
                     }
-                    await signUp(updatedValues);
+                    // last portion of handleSubmit is calling this signup function
+                    await signUp(updatedValues); //this is the actual signup
                   }}>
                   {/* Username */}
-                  {!isOrgInviteByLink ? (
+                  {!isOrgInviteByLink ? ( //when orgInvite is false it asks for username
                     <UsernameField
                       orgSlug={orgSlug}
                       label={t("username")}
@@ -624,7 +627,7 @@ export default function Signup({
               </div>
             </div>
           </div>
-          <div className="border-subtle lg:bg-subtle mx-auto mt-24 w-full max-w-2xl flex-col justify-between rounded-l-2xl pl-4 lg:mt-0 lg:flex lg:max-w-full lg:border lg:py-12 lg:pl-12 dark:bg-none">
+          <div className="border-subtle lg:bg-subtle mx-auto mt-24 w-full max-w-2xl flex-col justify-between rounded-l-2xl pl-4 dark:bg-none lg:mt-0 lg:flex lg:max-w-full lg:border lg:py-12 lg:pl-12">
             {IS_CALCOM && (
               <>
                 <div className="-mt-4 mb-6 mr-12 grid w-full grid-cols-3 gap-5 pr-4 sm:gap-3 lg:grid-cols-4">
@@ -632,21 +635,21 @@ export default function Signup({
                     <img
                       src="/product-cards/product-of-the-day.svg"
                       className="h-[34px] w-full dark:invert"
-                      alt="Cal.com was Product of the Day at ProductHunt"
+                      alt="This was Product of the Day at ProductHunt"
                     />
                   </div>
                   <div>
                     <img
                       src="/product-cards/product-of-the-week.svg"
                       className="h-[34px] w-full dark:invert"
-                      alt="Cal.com was Product of the Week at ProductHunt"
+                      alt="This was Product of the Week at ProductHunt"
                     />
                   </div>
                   <div>
                     <img
                       src="/product-cards/product-of-the-month.svg"
                       className="h-[34px] w-full dark:invert"
-                      alt="Cal.com was Product of the Month at ProductHunt"
+                      alt="This was Product of the Month at ProductHunt"
                     />
                   </div>
                 </div>
@@ -675,18 +678,18 @@ export default function Signup({
                 </div>
               </>
             )}
-            <div className="border-default hidden rounded-bl-2xl rounded-br-none rounded-tl-2xl border border-r-0 border-dashed bg-black/[3%] lg:block lg:py-[6px] lg:pl-[6px] dark:bg-white/5">
-              <img className="block dark:hidden" src="/mock-event-type-list.svg" alt="Cal.com Booking Page" />
+            <div className="border-default hidden rounded-bl-2xl rounded-br-none rounded-tl-2xl border border-r-0 border-dashed bg-black/[3%] dark:bg-white/5 lg:block lg:py-[6px] lg:pl-[6px]">
+              <img className="block dark:hidden" src="/mock-event-type-list.svg" alt="This is Booking Page" />
               <img
                 className="hidden dark:block"
                 src="/mock-event-type-list-dark.svg"
-                alt="Cal.com Booking Page"
+                alt="This is Booking Page"
               />
             </div>
             <div className="mr-12 mt-8 hidden h-full w-full grid-cols-3 gap-4 overflow-hidden lg:grid">
               {FEATURES.map((feature) => (
                 <>
-                  <div className="mb-8 flex max-w-52 flex-col leading-none sm:mb-0">
+                  <div className="max-w-52 mb-8 flex flex-col leading-none sm:mb-0">
                     <div className="text-emphasis items-center">
                       <Icon name={feature.icon} className="mb-1 h-4 w-4" />
                       <span className="text-sm font-medium">{t(feature.title)}</span>
