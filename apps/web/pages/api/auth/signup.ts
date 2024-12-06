@@ -33,7 +33,6 @@ async function ensureSignupIsEnabled(req: RequestWithUsernameStatus) {
 }
 
 function ensureReqIsPost(req: RequestWithUsernameStatus) {
-  //understood
   if (req.method !== "POST") {
     throw new HttpError({
       statusCode: 405,

@@ -81,6 +81,7 @@ export const UsernameAvailabilityField = ({
           onSuccessMutation={onSuccessMutation}
           onErrorMutation={onErrorMutation}
           disabled={!!user.organization?.id}
+          addOnLeading={`${usernamePrefix}/`}
           isPremium={isPremium}
         />
       )}
