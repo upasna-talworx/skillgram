@@ -1,7 +1,9 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import type { FormEvent } from "react";
 import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
+import type { z } from "zod";
 
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { md } from "@calcom/lib/markdownIt";
@@ -11,16 +13,28 @@ import { trpc } from "@calcom/trpc/react";
 import { Button, Editor, ImageUploader, Label, showToast } from "@calcom/ui";
 import { UserAvatar } from "@calcom/ui";
 
-type FormData = {
-  bio: string;
+import { ZAdminSetupInputSchema } from "/home/upasnasingh/talworx/skillgram/packages/trpc/server/routers/loggedInViewer/setupAdmin.schema";
+import { ZCandidateSetupInputSchema } from "/home/upasnasingh/talworx/skillgram/packages/trpc/server/routers/loggedInViewer/setupCandidate.schema";
+import { ZPanellistSetupInputSchema } from "/home/upasnasingh/talworx/skillgram/packages/trpc/server/routers/loggedInViewer/setupPanellist.schema";
+
+const roleSchemaMap: Record<string, z.ZodType<any>> = {
+  panelist: ZPanellistSetupInputSchema,
+  candidate: ZCandidateSetupInputSchema,
+  admin: ZAdminSetupInputSchema,
 };
 
-const UserProfile = () => {
+type UserProfileProps = {
+  role: string;
+};
+
+const UserProfile = ({ role }: UserProfileProps) => {
   const [user] = trpc.viewer.me.useSuspenseQuery();
   const { t } = useLocale();
   const avatarRef = useRef<HTMLInputElement>(null);
-  const { setValue, handleSubmit, getValues } = useForm<FormData>({
-    defaultValues: { bio: user?.bio || "" },
+  // Dynamically select schema
+  const selectedSchema = roleSchemaMap[role];
+  const { setValue, handleSubmit, getValues } = useForm<z.infer<typeof selectedSchema>>({
+    resolver: zodResolver(selectedSchema),
   });
 
   const { data: eventTypes } = trpc.viewer.eventTypes.list.useQuery();
@@ -59,12 +73,52 @@ const UserProfile = () => {
       showToast(t("problem_saving_user_profile"), "error");
     },
   });
-  const onSubmit = handleSubmit((data: { bio: string }) => {
-    const { bio } = data;
+  const onSubmit = handleSubmit(async (data: z.infer<typeof selectedSchema>) => {
+    const { bio, name, resume, company, yoe, skills } = data;
 
     telemetry.event(telemetryEventTypes.onboardingFinished);
+    console.log(`role${role}`);
+    // Role-specific logic
+    try {
+      console.log(`role${role}`);
+      switch (role) {
+        case "candidate":
+          await trpc.viewer.setupCandidate.useMutation().mutateAsync({
+            name: user?.name || "",
+            bio,
+            resume,
+            image: avatarRef.current?.value || "", // If you need an image, include it here
+          });
+          console.log("Candidate Executed");
+          break;
 
-    mutation.mutate({
+        case "panelist":
+          await trpc.viewer.setupPanellist.useMutation().mutateAsync({
+            name: user?.name || "",
+            company,
+            yoe,
+            skills,
+          });
+          console.log("Panelist Executed");
+          break;
+
+        case "admin":
+          await trpc.viewer.setupAdmin.useMutation().mutateAsync({
+            name: user?.name || "",
+          });
+          console.log("Admin Executed");
+          break;
+
+        default:
+          console.error("Invalid role specified");
+      }
+
+      console.log(`${role} setup completed successfully.`);
+    } catch (error) {
+      console.error(`Error setting up ${role}:`, error);
+    }
+    // Mutate the base user profile
+    await mutation.mutateAsync({
       bio,
       completedOnboarding: true,
     });
@@ -133,17 +187,79 @@ const UserProfile = () => {
           />
         </div>
       </div>
-      <fieldset className="mt-8">
-        <Label className="text-default mb-2 block text-sm font-medium">{t("about")}</Label>
-        <Editor
-          getText={() => md.render(getValues("bio") || user?.bio || "")}
-          setText={(value: string) => setValue("bio", turndown(value))}
-          excludedToolbarItems={["blockType"]}
-          firstRender={firstRender}
-          setFirstRender={setFirstRender}
-        />
-        <p className="text-default mt-2 font-sans text-sm font-normal">{t("few_sentences_about_yourself")}</p>
-      </fieldset>
+      {role === "candidate" && (
+        <>
+          <fieldset className="mt-8">
+            <Label className="text-default mb-2 block text-sm font-medium"> {t("Resume")} </Label>
+            <Editor
+              getText={() => getValues("resume") || ""}
+              setText={(value: string) => setValue("resume", value)}
+              placeholder={t("resume_url")}
+              plainText
+              excludedToolbarItems={["bold", "link", "italic", "blockType"]}
+            />
+          </fieldset>
+        </>
+      )}
+
+      {role === "panelist" && (
+        <>
+          <fieldset className="mt-8">
+            <label className="text-default mb-2 block text-sm font-medium">{t("Current Company")}</label>
+            <Editor
+              getText={() => getValues("company") || ""}
+              setText={(value: string) => setValue("company", value)}
+              placeholder={t("company_name")}
+              plainText
+              excludedToolbarItems={["bold", "link", "italic", "blockType"]}
+            />
+          </fieldset>
+          <fieldset className="mt-8">
+            <label className="text-default mb-2 block text-sm font-medium">{t("Years Of Experience")}</label>
+            <Editor
+              getText={() => getValues("yoe")?.toString() || ""}
+              setText={(value: string) => setValue("yoe", parseInt(value) || 0)}
+              placeholder={t("years_of_experience")}
+              plainText
+              excludedToolbarItems={["bold", "link", "italic", "blockType"]}
+            />
+          </fieldset>
+          <fieldset className="mt-8">
+            <label className="text-default mb-2 block text-sm font-medium">{t("Skills")}</label>
+            <Editor
+              getText={() => getValues("skills")?.join(", ") || ""}
+              setText={(value: string) =>
+                setValue(
+                  "skills",
+                  value.split(",").map((s) => s.trim())
+                )
+              }
+              placeholder={t("Mention your skills (separate them with comma)")}
+              plainText
+              excludedToolbarItems={["bold", "link", "italic", "blockType"]}
+            />
+          </fieldset>
+        </>
+      )}
+
+      {role != "admin" && (
+        <>
+          <fieldset className="mt-8">
+            <Label className="text-default mb-2 block text-sm font-medium">{t("about")}</Label>
+            <Editor
+              getText={() => md.render(getValues("bio") || user?.bio || "")}
+              setText={(value: string) => setValue("bio", turndown(value))}
+              excludedToolbarItems={["blockType"]}
+              firstRender={firstRender}
+              setFirstRender={setFirstRender}
+            />
+            <p className="text-default mt-2 font-sans text-sm font-normal">
+              {t("few_sentences_about_yourself")}
+            </p>
+          </fieldset>
+        </>
+      )}
+
       <Button
         loading={mutation.isPending}
         EndIcon="arrow-right"

@@ -172,7 +172,7 @@ const OnboardingPage = ({ steps, role, ...props }: { steps: StepsType } & { role
                     defaultScheduleId={user.defaultScheduleId}
                   />
                 )}
-                {currentStep === "user-profile" && <UserProfile />}
+                {currentStep === "user-profile" && <UserProfile role={role} />}
               </Suspense>
             </StepCard>
 
