@@ -186,15 +186,7 @@ PageProps & WithNonceProps<{}>) {
         description={t("login")}
         showLogo
         heading={twoFactorRequired ? t("2fa_code") : t("welcome_back")}
-        footerText={
-          twoFactorRequired
-            ? !totpEmail
-              ? TwoFactorFooter
-              : ExternalTotpFooter
-            : process.env.NEXT_PUBLIC_DISABLE_SIGNUP !== "true"
-            ? LoginFooter
-            : null
-        }>
+        footerText={twoFactorRequired ? (!totpEmail ? TwoFactorFooter : ExternalTotpFooter) : null}>
         <FormProvider {...methods}>
           {!twoFactorRequired && (
             <>

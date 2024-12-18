@@ -63,7 +63,6 @@ const OnboardingPage = ({ steps, role, ...props }: { steps: StepsType } & { role
   const router = useRouter();
   const [user] = trpc.viewer.me.useSuspenseQuery();
   const { t } = useLocale();
-
   const result = stepRouteSchema.safeParse({
     ...params,
     step: Array.isArray(params.step) ? params.step : [params.step],
@@ -116,8 +115,6 @@ const OnboardingPage = ({ steps, role, ...props }: { steps: StepsType } & { role
   };
 
   const currentStepIndex = steps.indexOf(currentStep);
-  console.log(`MaxSteps:${steps.length}`);
-  console.log(`Steps:${steps}`);
   return (
     <div
       className={classNames(
