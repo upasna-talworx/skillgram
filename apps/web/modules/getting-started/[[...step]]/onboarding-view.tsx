@@ -111,7 +111,7 @@ const OnboardingPage = ({ steps, role, ...props }: { steps: StepsType } & { role
 
   const goToIndex = (index: number) => {
     const newStep = steps[index] as StepsType[number];
-    router.push(`/signup/${role}/${stepTransform(newStep, steps)}`);
+    router.push(`/profile-build/${role}/${stepTransform(newStep, steps)}`);
   };
 
   const currentStepIndex = steps.indexOf(currentStep);

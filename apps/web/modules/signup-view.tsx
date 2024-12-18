@@ -175,8 +175,9 @@ export default function Signup({
   isSAMLLoginEnabled,
   orgAutoAcceptEmail,
   redirectUrl,
-  emailVerificationEnabled,
-}: SignupProps) {
+  // emailVerificationEnabled,
+  role,
+}: SignupProps & { role: string }) {
   const isOrgInviteByLink = orgSlug && !prepopulateFormValues?.username;
   const [isSamlSignup, setIsSamlSignup] = useState(false);
   const [premiumUsername, setPremiumUsername] = useState(false);
@@ -254,7 +255,7 @@ export default function Signup({
 
         telemetry.event(telemetryEventTypes.signup, collectPageParameters());
 
-        const verifyOrGettingStarted = emailVerificationEnabled ? "auth/verify-email" : "getting-started";
+        // const verifyOrGettingStarted = emailVerificationEnabled ? "auth/verify-email" : "getting-started";
         const gettingStartedWithPlatform = "settings/platform/new";
 
         const constructCallBackIfUrlPresent = () => {
@@ -270,7 +271,8 @@ export default function Signup({
             return `${WEBAPP_URL}/${gettingStartedWithPlatform}?from=signup`;
           }
 
-          return `${WEBAPP_URL}/${verifyOrGettingStarted}?from=signup`;
+          // return `${WEBAPP_URL}/${verifyOrGettingStarted}?from=signup`;
+          return `${WEBAPP_URL}/profile-build/${role}?from=signup`;
         };
 
         const constructCallBackUrl = () => {
