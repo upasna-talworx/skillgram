@@ -35,6 +35,10 @@ const UserProfile = ({ role }: UserProfileProps) => {
   const selectedSchema = roleSchemaMap[role];
   const { setValue, handleSubmit, getValues } = useForm<z.infer<typeof selectedSchema>>({
     resolver: zodResolver(selectedSchema),
+    defaultValues: {
+      name: "",
+      image: "",
+    },
   });
 
   const { data: eventTypes } = trpc.viewer.eventTypes.list.useQuery();
@@ -44,6 +48,9 @@ const UserProfile = ({ role }: UserProfileProps) => {
   const createEventType = trpc.viewer.eventTypes.create.useMutation();
   const telemetry = useTelemetry();
   const [firstRender, setFirstRender] = useState(true);
+  const mutationCandidate = trpc.viewer.setupCandidate.useMutation();
+  const mutationPanelist = trpc.viewer.setupPanellist.useMutation();
+  const mutationAdmin = trpc.viewer.setupAdmin.useMutation();
 
   const mutation = trpc.viewer.updateProfile.useMutation({
     onSuccess: async (_data, context) => {
@@ -80,33 +87,41 @@ const UserProfile = ({ role }: UserProfileProps) => {
     console.log(`role${role}`);
     // Role-specific logic
     try {
-      console.log(`role${role}`);
       switch (role) {
         case "candidate":
-          await trpc.viewer.setupCandidate.useMutation().mutateAsync({
-            name: user?.name || "",
-            bio,
-            resume,
-            image: avatarRef.current?.value || "", // If you need an image, include it here
-          });
-          console.log("Candidate Executed");
+          try {
+            await mutationCandidate.mutateAsync({
+              name: user?.name || "",
+              bio,
+              resume,
+              image: avatarRef.current?.value || "", // If you need an image, include it here
+            });
+          } catch (error) {
+            console.error("Error executing Candidate:", error);
+          }
           break;
 
         case "panelist":
-          await trpc.viewer.setupPanellist.useMutation().mutateAsync({
-            name: user?.name || "",
-            company,
-            yoe,
-            skills,
-          });
-          console.log("Panelist Executed");
+          try {
+            await mutationPanelist.mutateAsync({
+              name: user?.name || "",
+              company,
+              yoe,
+              skills,
+            });
+          } catch (error) {
+            console.error("Error executing Panelist:", error);
+          }
           break;
 
         case "admin":
-          await trpc.viewer.setupAdmin.useMutation().mutateAsync({
-            name: user?.name || "",
-          });
-          console.log("Admin Executed");
+          try {
+            await mutationAdmin.mutateAsync({
+              name: user?.name || "",
+            });
+          } catch (error) {
+            console.error("Error executing Admin:", error);
+          }
           break;
 
         default:
