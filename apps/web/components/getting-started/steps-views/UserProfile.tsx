@@ -10,12 +10,11 @@ import { md } from "@calcom/lib/markdownIt";
 import { telemetryEventTypes, useTelemetry } from "@calcom/lib/telemetry";
 import turndown from "@calcom/lib/turndownService";
 import { trpc } from "@calcom/trpc/react";
+import { ZAdminSetupInputSchema } from "@calcom/trpc/server/routers/loggedInViewer/setupAdmin.schema";
+import { ZCandidateSetupInputSchema } from "@calcom/trpc/server/routers/loggedInViewer/setupCandidate.schema";
+import { ZPanellistSetupInputSchema } from "@calcom/trpc/server/routers/loggedInViewer/setupPanellist.schema";
 import { Button, Editor, ImageUploader, Label, showToast } from "@calcom/ui";
 import { UserAvatar } from "@calcom/ui";
-
-import { ZAdminSetupInputSchema } from "/home/upasnasingh/talworx/skillgram/packages/trpc/server/routers/loggedInViewer/setupAdmin.schema";
-import { ZCandidateSetupInputSchema } from "/home/upasnasingh/talworx/skillgram/packages/trpc/server/routers/loggedInViewer/setupCandidate.schema";
-import { ZPanellistSetupInputSchema } from "/home/upasnasingh/talworx/skillgram/packages/trpc/server/routers/loggedInViewer/setupPanellist.schema";
 
 const roleSchemaMap: Record<string, z.ZodType<any>> = {
   panelist: ZPanellistSetupInputSchema,
@@ -87,11 +86,9 @@ const UserProfile = ({ role }: UserProfileProps) => {
     },
   });
   const onSubmit = handleSubmit(async (data: z.infer<typeof selectedSchema>) => {
-    console.log("This is logged if the validation is successful!");
     const { bio, name, resume, company, yoe, skills } = data;
 
     telemetry.event(telemetryEventTypes.onboardingFinished);
-    console.log(`role${role}`);
     // Role-specific logic
     try {
       switch (role) {

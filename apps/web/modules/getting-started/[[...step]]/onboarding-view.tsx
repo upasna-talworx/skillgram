@@ -67,7 +67,6 @@ const OnboardingPage = ({ steps, role, ...props }: { steps: StepsType } & { role
     ...params,
     step: Array.isArray(params.step) ? params.step : [params.step],
   });
-  console.log(result);
   const currentStep = result.success ? result.data.step[0] : steps[0];
   const from = result.success ? result.data.from : "";
   const headers: Record<(typeof steps)[number], { title: string; subtitle: string[]; skipText?: string }> = {
