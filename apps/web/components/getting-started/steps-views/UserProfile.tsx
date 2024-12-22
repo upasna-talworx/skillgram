@@ -33,12 +33,18 @@ const UserProfile = ({ role }: UserProfileProps) => {
   const avatarRef = useRef<HTMLInputElement>(null);
   // Dynamically select schema
   const selectedSchema = roleSchemaMap[role];
-  const { setValue, handleSubmit, getValues } = useForm<z.infer<typeof selectedSchema>>({
+  const {
+    setValue,
+    handleSubmit,
+    getValues,
+    formState: { errors },
+  } = useForm<z.infer<typeof selectedSchema>>({
     resolver: zodResolver(selectedSchema),
     defaultValues: {
       name: "",
       image: "",
     },
+    mode: "onChange",
   });
 
   const { data: eventTypes } = trpc.viewer.eventTypes.list.useQuery();
@@ -81,6 +87,7 @@ const UserProfile = ({ role }: UserProfileProps) => {
     },
   });
   const onSubmit = handleSubmit(async (data: z.infer<typeof selectedSchema>) => {
+    console.log("This is logged if the validation is successful!");
     const { bio, name, resume, company, yoe, skills } = data;
 
     telemetry.event(telemetryEventTypes.onboardingFinished);
@@ -233,11 +240,17 @@ const UserProfile = ({ role }: UserProfileProps) => {
             <label className="text-default mb-2 block text-sm font-medium">{t("Years Of Experience")}</label>
             <Editor
               getText={() => getValues("yoe")?.toString() || ""}
-              setText={(value: string) => setValue("yoe", parseInt(value) || 0)}
+              setText={(value: string) => setValue("yoe", parseInt(value) || value)}
               placeholder={t("years_of_experience")}
               plainText
               excludedToolbarItems={["bold", "link", "italic", "blockType"]}
             />
+            {/* Display Error */}
+            {errors.yoe && (
+              <p className="mt-2 text-sm text-red-500">
+                {errors.yoe.message || "Please provide a valid number for years of experience."}
+              </p>
+            )}
           </fieldset>
           <fieldset className="mt-8">
             <label className="text-default mb-2 block text-sm font-medium">{t("Skills")}</label>
