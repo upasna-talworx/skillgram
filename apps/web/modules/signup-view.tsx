@@ -3,9 +3,7 @@
 import { Analytics as DubAnalytics } from "@dub/analytics/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signIn } from "next-auth/react";
-import { Trans } from "next-i18next";
 import dynamic from "next/dynamic";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Script from "next/script";
 import { useState, useEffect } from "react";
@@ -24,8 +22,6 @@ import {
   IS_EUROPE,
   WEBAPP_URL,
   CLOUDFLARE_SITE_ID,
-  WEBSITE_PRIVACY_POLICY_URL,
-  WEBSITE_TERMS_URL,
   WEBSITE_URL,
 } from "@calcom/lib/constants";
 import { isENVDev } from "@calcom/lib/env";
@@ -37,17 +33,7 @@ import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { collectPageParameters, telemetryEventTypes, useTelemetry } from "@calcom/lib/telemetry";
 import { signupSchema as apiSignupSchema } from "@calcom/prisma/zod-utils";
 import type { inferSSRProps } from "@calcom/types/inferSSRProps";
-import {
-  Button,
-  HeadSeo,
-  PasswordField,
-  TextField,
-  Form,
-  Alert,
-  CheckboxField,
-  Icon,
-  showToast,
-} from "@calcom/ui";
+import { Button, HeadSeo, PasswordField, TextField, Form, Alert, Icon, showToast } from "@calcom/ui";
 
 import type { getServerSideProps } from "@lib/signup/getServerSideProps";
 
@@ -426,12 +412,12 @@ export default function Signup({
                       }}
                     />
                   ) : null}
-
+                  {/* 
                   <CheckboxField
                     data-testid="signup-cookie-content-checkbox"
                     onChange={() => handleConsentChange(userConsentToCookie)}
                     description={t("cookie_consent_checkbox")}
-                  />
+                  /> */}
                   {errors.apiError && (
                     <Alert
                       className="mb-3"
@@ -586,7 +572,7 @@ export default function Signup({
               </div>
             )}
 
-            {/* Already have an account & T&C */}
+            {/* Already have an account & T&C
             <div className="mt-10 flex h-full flex-col justify-end pb-6 text-xs">
               <div className="flex flex-col text-sm">
                 <div className="flex gap-1">
@@ -617,7 +603,7 @@ export default function Signup({
                   />
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
         <Toaster position="bottom-right" />

@@ -12,6 +12,7 @@ import turndown from "@calcom/lib/turndownService";
 import { trpc } from "@calcom/trpc/react";
 import { ZAdminSetupInputSchema } from "@calcom/trpc/server/routers/loggedInViewer/setupAdmin.schema";
 import { ZCandidateSetupInputSchema } from "@calcom/trpc/server/routers/loggedInViewer/setupCandidate.schema";
+import { ZClientSetupInputSchema } from "@calcom/trpc/server/routers/loggedInViewer/setupClient.schema";
 import { ZPanellistSetupInputSchema } from "@calcom/trpc/server/routers/loggedInViewer/setupPanellist.schema";
 import { Button, Editor, ImageUploader, Label, showToast } from "@calcom/ui";
 import { UserAvatar } from "@calcom/ui";
@@ -20,6 +21,7 @@ const roleSchemaMap: Record<string, z.ZodType<any>> = {
   panelist: ZPanellistSetupInputSchema,
   candidate: ZCandidateSetupInputSchema,
   admin: ZAdminSetupInputSchema,
+  client: ZClientSetupInputSchema,
 };
 
 type UserProfileProps = {
@@ -56,6 +58,7 @@ const UserProfile = ({ role }: UserProfileProps) => {
   const mutationCandidate = trpc.viewer.setupCandidate.useMutation();
   const mutationPanelist = trpc.viewer.setupPanellist.useMutation();
   const mutationAdmin = trpc.viewer.setupAdmin.useMutation();
+  const mutationClient = trpc.viewer.setupClient.useMutation();
 
   const mutation = trpc.viewer.updateProfile.useMutation({
     onSuccess: async (_data, context) => {
@@ -125,6 +128,16 @@ const UserProfile = ({ role }: UserProfileProps) => {
             });
           } catch (error) {
             console.error("Error executing Admin:", error);
+          }
+          break;
+
+        case "client":
+          try {
+            await mutationClient.mutateAsync({
+              name: user?.name || "",
+            });
+          } catch (error) {
+            console.error("Error executing Client:", error);
           }
           break;
 
@@ -267,7 +280,7 @@ const UserProfile = ({ role }: UserProfileProps) => {
         </>
       )}
 
-      {role != "admin" && (
+      {role !== "admin" && role !== "client" && (
         <>
           <fieldset className="mt-8">
             <Label className="text-default mb-2 block text-sm font-medium">{t("about")}</Label>
