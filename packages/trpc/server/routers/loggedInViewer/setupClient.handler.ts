@@ -1,5 +1,6 @@
 import type { GetServerSidePropsContext, NextApiResponse } from "next";
 
+import logger from "@calcom/lib/logger";
 import { prisma } from "@calcom/prisma";
 import type { TrpcSessionUser } from "@calcom/trpc/server/trpc";
 
@@ -36,8 +37,21 @@ export const setupClientHandler = async ({ ctx, input }: setupClient) => {
     return;
   }
 
-  // client left
-  console.log(input);
+  try {
+    // Create the Client entry
+    await prisma.client.create({
+      data: {
+        userId: userId.id,
+        companyId: input.companyID,
+      },
+    });
 
-  return;
+    logger.info(`Client created successfully for user ID ${userId.id} and company Id ${input.companyID}`);
+  } catch (e) {
+    logger.error(e);
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: "Could not create client",
+    });
+  }
 };

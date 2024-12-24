@@ -51,6 +51,7 @@ type AppsRouterHandlerCache = {
   setupCandidate?: typeof import("./setupCandidate.handler").setupCandidateHandler;
   setupPanellist?: typeof import("./setupPanellist.handler").setupPanellistHandler;
   setupClient?: typeof import("./setupClient.handler").setupClientHandler;
+  fetchCompanies?: typeof import("./fetchCompanies.handler").fetchCompaniesHandler;
   eventTypeOrder?: typeof import("./eventTypeOrder.handler").eventTypeOrderHandler;
   routingFormOrder?: typeof import("./routingFormOrder.handler").routingFormOrderHandler;
   workflowOrder?: typeof import("./workflowOrder.handler").workflowOrderHandler;
@@ -267,6 +268,19 @@ export const loggedInViewerRouter = router({
     }
 
     return UNSTABLE_HANDLER_CACHE.setupClient({ ctx, input });
+  }),
+
+  fetchCompanies: authedProcedure.query(async ({}) => {
+    // Lazy load the handler and cache it for performance
+    if (!UNSTABLE_HANDLER_CACHE.fetchCompanies) {
+      UNSTABLE_HANDLER_CACHE.fetchCompanies = (
+        await import("./fetchCompanies.handler")
+      ).fetchCompaniesHandler;
+    }
+
+    // Use the cached handler to fetch the data
+    const fetchCompaniesHandler = UNSTABLE_HANDLER_CACHE.fetchCompanies;
+    return fetchCompaniesHandler();
   }),
 
   unlinkConnectedAccount: authedProcedure.mutation(async (opts) => {

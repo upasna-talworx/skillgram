@@ -14,7 +14,8 @@ import { ZAdminSetupInputSchema } from "@calcom/trpc/server/routers/loggedInView
 import { ZCandidateSetupInputSchema } from "@calcom/trpc/server/routers/loggedInViewer/setupCandidate.schema";
 import { ZClientSetupInputSchema } from "@calcom/trpc/server/routers/loggedInViewer/setupClient.schema";
 import { ZPanellistSetupInputSchema } from "@calcom/trpc/server/routers/loggedInViewer/setupPanellist.schema";
-import { Button, Editor, ImageUploader, Label, showToast } from "@calcom/ui";
+import type { ActionType } from "@calcom/ui";
+import { Button, Editor, ImageUploader, Label, showToast, DropdownActions } from "@calcom/ui";
 import { UserAvatar } from "@calcom/ui";
 
 const roleSchemaMap: Record<string, z.ZodType<any>> = {
@@ -38,6 +39,7 @@ const UserProfile = ({ role }: UserProfileProps) => {
     setValue,
     handleSubmit,
     getValues,
+    register,
     formState: { errors },
   } = useForm<z.infer<typeof selectedSchema>>({
     resolver: zodResolver(selectedSchema),
@@ -47,7 +49,8 @@ const UserProfile = ({ role }: UserProfileProps) => {
     },
     mode: "onChange",
   });
-
+  const [companyName, setCompanyName] = useState("");
+  let companyActions: ActionType[] = [];
   const { data: eventTypes } = trpc.viewer.eventTypes.list.useQuery();
   const [imageSrc, setImageSrc] = useState<string>(user?.avatar || "");
   const utils = trpc.useUtils();
@@ -89,7 +92,7 @@ const UserProfile = ({ role }: UserProfileProps) => {
     },
   });
   const onSubmit = handleSubmit(async (data: z.infer<typeof selectedSchema>) => {
-    const { bio, name, resume, company, yoe, skills } = data;
+    const { bio, name, resume, company, yoe, skills, companyID } = data;
 
     telemetry.event(telemetryEventTypes.onboardingFinished);
     // Role-specific logic
@@ -135,6 +138,7 @@ const UserProfile = ({ role }: UserProfileProps) => {
           try {
             await mutationClient.mutateAsync({
               name: user?.name || "",
+              companyID,
             });
           } catch (error) {
             console.error("Error executing Client:", error);
@@ -183,6 +187,23 @@ const UserProfile = ({ role }: UserProfileProps) => {
     },
   ];
 
+  const { data: companies, isLoading, isError } = trpc.viewer.fetchCompanies.useQuery();
+  if (role === "client") {
+    if (isError) return <div>Error occurred</div>;
+    if (isLoading && !companies) return <div>Loading...</div>;
+    if (companies) {
+      const handleCompanySelect = (companyId: number, companyName: string) => {
+        setValue("companyID", companyId);
+        setCompanyName(companyName);
+      };
+
+      companyActions = companies.map((company) => ({
+        id: String(company.id),
+        label: company.label,
+        onClick: () => handleCompanySelect(company.id, company.label), // Update form value on click
+      }));
+    }
+  }
   return (
     <form onSubmit={onSubmit}>
       <div className="flex flex-row items-center justify-start rtl:justify-end">
@@ -230,6 +251,30 @@ const UserProfile = ({ role }: UserProfileProps) => {
               plainText
               excludedToolbarItems={["bold", "link", "italic", "blockType"]}
             />
+          </fieldset>
+        </>
+      )}
+
+      {role === "client" && (
+        <>
+          <fieldset className="mt-8">
+            <Label className="text-default mb-2 block text-sm font-medium"> {t("Company")} </Label>
+            <div className="relative w-64">
+              <DropdownActions
+                actions={companyActions}
+                actionTrigger={
+                  <button
+                    type="button"
+                    className="flex w-full items-center justify-between rounded border bg-gray-100 px-4 py-2 text-gray-800">
+                    {companyName || "Select a Company"}
+                    <span className="ml-2 text-gray-500">▼</span>
+                  </button>
+                }
+              />
+            </div>
+            {/* Register the field */}
+            <input type="hidden" {...register("companyID", { required: "Company is required" })} />
+            {errors.companyID && <p className="text-sm text-red-500">{errors.companyID.message}</p>}
           </fieldset>
         </>
       )}
