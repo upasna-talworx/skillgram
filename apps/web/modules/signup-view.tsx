@@ -3,9 +3,7 @@
 import { Analytics as DubAnalytics } from "@dub/analytics/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signIn } from "next-auth/react";
-import { Trans } from "next-i18next";
 import dynamic from "next/dynamic";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Script from "next/script";
 import { useState, useEffect } from "react";
@@ -17,17 +15,13 @@ import { z } from "zod";
 import getStripe from "@calcom/app-store/stripepayment/lib/client";
 import { getPremiumPlanPriceValue } from "@calcom/app-store/stripepayment/lib/utils";
 import { getOrgUsernameFromEmail } from "@calcom/features/auth/signup/utils/getOrgUsernameFromEmail";
-import { getOrgFullOrigin } from "@calcom/features/ee/organizations/lib/orgDomains";
 import { classNames } from "@calcom/lib";
 import {
   APP_NAME,
-  URL_PROTOCOL_REGEX,
   IS_CALCOM,
   IS_EUROPE,
   WEBAPP_URL,
   CLOUDFLARE_SITE_ID,
-  WEBSITE_PRIVACY_POLICY_URL,
-  WEBSITE_TERMS_URL,
   WEBSITE_URL,
 } from "@calcom/lib/constants";
 import { isENVDev } from "@calcom/lib/env";
@@ -39,17 +33,7 @@ import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { collectPageParameters, telemetryEventTypes, useTelemetry } from "@calcom/lib/telemetry";
 import { signupSchema as apiSignupSchema } from "@calcom/prisma/zod-utils";
 import type { inferSSRProps } from "@calcom/types/inferSSRProps";
-import {
-  Button,
-  HeadSeo,
-  PasswordField,
-  TextField,
-  Form,
-  Alert,
-  CheckboxField,
-  Icon,
-  showToast,
-} from "@calcom/ui";
+import { Button, HeadSeo, PasswordField, TextField, Form, Alert, Icon, showToast } from "@calcom/ui";
 
 import type { getServerSideProps } from "@lib/signup/getServerSideProps";
 
@@ -177,8 +161,9 @@ export default function Signup({
   isSAMLLoginEnabled,
   orgAutoAcceptEmail,
   redirectUrl,
-  emailVerificationEnabled,
-}: SignupProps) {
+  // emailVerificationEnabled,
+  role,
+}: SignupProps & { role: string }) {
   const isOrgInviteByLink = orgSlug && !prepopulateFormValues?.username;
   const [isSamlSignup, setIsSamlSignup] = useState(false);
   const [premiumUsername, setPremiumUsername] = useState(false);
@@ -256,7 +241,7 @@ export default function Signup({
 
         telemetry.event(telemetryEventTypes.signup, collectPageParameters());
 
-        const verifyOrGettingStarted = emailVerificationEnabled ? "auth/verify-email" : "getting-started";
+        // const verifyOrGettingStarted = emailVerificationEnabled ? "auth/verify-email" : "getting-started";
         const gettingStartedWithPlatform = "settings/platform/new";
 
         const constructCallBackIfUrlPresent = () => {
@@ -272,7 +257,8 @@ export default function Signup({
             return `${WEBAPP_URL}/${gettingStartedWithPlatform}?from=signup`;
           }
 
-          return `${WEBAPP_URL}/${verifyOrGettingStarted}?from=signup`;
+          // return `${WEBAPP_URL}/${verifyOrGettingStarted}?from=signup`;
+          return `${WEBAPP_URL}/profile-build/${role}?from=signup`;
         };
 
         const constructCallBackUrl = () => {
@@ -338,7 +324,7 @@ export default function Signup({
           <div className="ml-auto mr-auto mt-0 flex w-full max-w-xl flex-col px-4 pt-6 sm:px-16 md:px-20 lg:mt-24 2xl:px-28">
             {displayBackButton && (
               <div className="flex w-fit lg:-mt-12">
-                <Button
+                <Button //back button
                   color="minimal"
                   className="hover:bg-subtle todesktop:mt-10 mb-6 flex h-6 max-h-6 w-full items-center rounded-md px-3 py-2"
                   StartIcon="arrow-left"
@@ -375,15 +361,18 @@ export default function Signup({
                   handleSubmit={async (values) => {
                     let updatedValues = values;
                     if (!formMethods.getValues().username && isOrgInviteByLink && orgAutoAcceptEmail) {
+                      // if there is no email but orgInvite is true and orgauctoaccept email is true
+                      // username is taken from email
                       updatedValues = {
                         ...values,
                         username: getOrgUsernameFromEmail(values.email, orgAutoAcceptEmail),
                       };
                     }
-                    await signUp(updatedValues);
+                    // last portion of handleSubmit is calling this signup function
+                    await signUp(updatedValues); //this is the actual signup
                   }}>
                   {/* Username */}
-                  {!isOrgInviteByLink ? (
+                  {!isOrgInviteByLink ? ( //when orgInvite is false it asks for username
                     <UsernameField
                       orgSlug={orgSlug}
                       label={t("username")}
@@ -394,14 +383,6 @@ export default function Signup({
                       setUsernameTaken={(value) => setUsernameTaken(value)}
                       data-testid="signup-usernamefield"
                       setPremium={(value) => setPremiumUsername(value)}
-                      addOnLeading={
-                        orgSlug
-                          ? `${getOrgFullOrigin(orgSlug, { protocol: true }).replace(
-                              URL_PROTOCOL_REGEX,
-                              ""
-                            )}/`
-                          : `${process.env.NEXT_PUBLIC_WEBSITE_URL.replace(URL_PROTOCOL_REGEX, "")}/`
-                      }
                     />
                   ) : null}
                   {/* Email */}
@@ -431,12 +412,12 @@ export default function Signup({
                       }}
                     />
                   ) : null}
-
+                  {/* 
                   <CheckboxField
                     data-testid="signup-cookie-content-checkbox"
                     onChange={() => handleConsentChange(userConsentToCookie)}
                     description={t("cookie_consent_checkbox")}
-                  />
+                  /> */}
                   {errors.apiError && (
                     <Alert
                       className="mb-3"
@@ -591,7 +572,7 @@ export default function Signup({
               </div>
             )}
 
-            {/* Already have an account & T&C */}
+            {/* Already have an account & T&C
             <div className="mt-10 flex h-full flex-col justify-end pb-6 text-xs">
               <div className="flex flex-col text-sm">
                 <div className="flex gap-1">
@@ -622,89 +603,7 @@ export default function Signup({
                   />
                 </div>
               </div>
-            </div>
-          </div>
-          <div className="border-subtle lg:bg-subtle mx-auto mt-24 w-full max-w-2xl flex-col justify-between rounded-l-2xl pl-4 lg:mt-0 lg:flex lg:max-w-full lg:border lg:py-12 lg:pl-12 dark:bg-none">
-            {IS_CALCOM && (
-              <>
-                <div className="-mt-4 mb-6 mr-12 grid w-full grid-cols-3 gap-5 pr-4 sm:gap-3 lg:grid-cols-4">
-                  <div>
-                    <img
-                      src="/product-cards/product-of-the-day.svg"
-                      className="h-[34px] w-full dark:invert"
-                      alt="Cal.com was Product of the Day at ProductHunt"
-                    />
-                  </div>
-                  <div>
-                    <img
-                      src="/product-cards/product-of-the-week.svg"
-                      className="h-[34px] w-full dark:invert"
-                      alt="Cal.com was Product of the Week at ProductHunt"
-                    />
-                  </div>
-                  <div>
-                    <img
-                      src="/product-cards/product-of-the-month.svg"
-                      className="h-[34px] w-full dark:invert"
-                      alt="Cal.com was Product of the Month at ProductHunt"
-                    />
-                  </div>
-                </div>
-                <div className="mb-6 mr-12 grid w-full grid-cols-3 gap-5 pr-4 sm:gap-3 lg:grid-cols-4">
-                  <div>
-                    <img
-                      src="/product-cards/producthunt.svg"
-                      className="h-[54px] w-full"
-                      alt="ProductHunt Rating of 5 Stars"
-                    />
-                  </div>
-                  <div>
-                    <img
-                      src="/product-cards/google-reviews.svg"
-                      className="h-[54px] w-full"
-                      alt="Google Reviews Rating of 4.7 Stars"
-                    />
-                  </div>
-                  <div>
-                    <img
-                      src="/product-cards/g2.svg"
-                      className="h-[54px] w-full"
-                      alt="G2 Rating of 4.7 Stars"
-                    />
-                  </div>
-                </div>
-              </>
-            )}
-            <div className="border-default hidden rounded-bl-2xl rounded-br-none rounded-tl-2xl border border-r-0 border-dashed bg-black/[3%] lg:block lg:py-[6px] lg:pl-[6px] dark:bg-white/5">
-              <img className="block dark:hidden" src="/mock-event-type-list.svg" alt="Cal.com Booking Page" />
-              <img
-                className="hidden dark:block"
-                src="/mock-event-type-list-dark.svg"
-                alt="Cal.com Booking Page"
-              />
-            </div>
-            <div className="mr-12 mt-8 hidden h-full w-full grid-cols-3 gap-4 overflow-hidden lg:grid">
-              {FEATURES.map((feature) => (
-                <>
-                  <div className="mb-8 flex max-w-52 flex-col leading-none sm:mb-0">
-                    <div className="text-emphasis items-center">
-                      <Icon name={feature.icon} className="mb-1 h-4 w-4" />
-                      <span className="text-sm font-medium">{t(feature.title)}</span>
-                    </div>
-                    <div className="text-subtle text-sm">
-                      <p>
-                        {t(
-                          feature.description,
-                          feature.i18nOptions && {
-                            ...feature.i18nOptions,
-                          }
-                        )}
-                      </p>
-                    </div>
-                  </div>
-                </>
-              ))}
-            </div>
+            </div> */}
           </div>
         </div>
         <Toaster position="bottom-right" />

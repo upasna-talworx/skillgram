@@ -6,7 +6,7 @@ import type { Step } from "~/getting-started/[[...step]]/onboarding-view";
 
 const steps: Step[] = ["user-settings", "user-profile"];
 
-const Page = (props: PageProps) => <OnboardingPage steps={steps} role="candidate" {...props} />;
+const Page = (props: PageProps) => <OnboardingPage steps={steps} role="admin" {...props} />;
 
 export { getServerSideProps } from "@lib/getting-started/[[...step]]/getServerSideProps";
 Page.PageWrapper = PageWrapper;

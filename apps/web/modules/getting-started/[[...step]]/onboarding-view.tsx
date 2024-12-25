@@ -24,6 +24,15 @@ import UserProfile from "@components/getting-started/steps-views/UserProfile";
 import { UserSettings } from "@components/getting-started/steps-views/UserSettings";
 
 const INITIAL_STEP = "user-settings";
+export type Step =
+  | "user-settings"
+  | "connected-calendar"
+  | "connected-video"
+  | "setup-availability"
+  | "user-profile";
+
+type StepsType = Step[];
+
 const steps = [
   "user-settings",
   "connected-calendar",
@@ -32,10 +41,10 @@ const steps = [
   "user-profile",
 ] as const;
 
-const stepTransform = (step: (typeof steps)[number]) => {
-  const stepIndex = steps.indexOf(step);
+const stepTransform = (step: StepsType[number], stepArr: StepsType) => {
+  const stepIndex = stepArr.indexOf(step);
   if (stepIndex > -1) {
-    return steps[stepIndex];
+    return stepArr[stepIndex];
   }
   return INITIAL_STEP;
 };
@@ -47,48 +56,46 @@ const stepRouteSchema = z.object({
 
 export type PageProps = inferSSRProps<typeof getServerSideProps>;
 // TODO: Refactor how steps work to be contained in one array/object. Currently we have steps,initalsteps,headers etc. These can all be in one place
-const OnboardingPage = (props: PageProps) => {
+const OnboardingPage = ({ steps, role, ...props }: { steps: StepsType } & { role: string } & PageProps) => {
   const pathname = usePathname();
   const params = useParamsWithFallback();
 
   const router = useRouter();
   const [user] = trpc.viewer.me.useSuspenseQuery();
   const { t } = useLocale();
-
   const result = stepRouteSchema.safeParse({
     ...params,
     step: Array.isArray(params.step) ? params.step : [params.step],
   });
-
-  const currentStep = result.success ? result.data.step[0] : INITIAL_STEP;
+  const currentStep = result.success ? result.data.step[0] : steps[0];
   const from = result.success ? result.data.from : "";
-  const headers = [
-    {
+  const headers: Record<(typeof steps)[number], { title: string; subtitle: string[]; skipText?: string }> = {
+    "user-settings": {
       title: `${t("welcome_to_cal_header", { appName: APP_NAME })}`,
       subtitle: [`${t("we_just_need_basic_info")}`, `${t("edit_form_later_subtitle")}`],
     },
-    {
+    "connected-calendar": {
       title: `${t("connect_your_calendar")}`,
       subtitle: [`${t("connect_your_calendar_instructions")}`],
       skipText: `${t("connect_calendar_later")}`,
     },
-    {
+    "connected-video": {
       title: `${t("connect_your_video_app")}`,
       subtitle: [`${t("connect_your_video_app_instructions")}`],
       skipText: `${t("set_up_later")}`,
     },
-    {
+    "setup-availability": {
       title: `${t("set_availability")}`,
       subtitle: [
         `${t("set_availability_getting_started_subtitle_1")}`,
         `${t("set_availability_getting_started_subtitle_2")}`,
       ],
     },
-    {
+    "user-profile": {
       title: `${t("nearly_there")}`,
       subtitle: [`${t("nearly_there_instructions")}`],
     },
-  ];
+  };
 
   // TODO: Add this in when we have solved the ability to move to tokens accept invite and note invitedto
   // Ability to accept other pending invites if any (low priority)
@@ -102,12 +109,11 @@ const OnboardingPage = (props: PageProps) => {
   // }
 
   const goToIndex = (index: number) => {
-    const newStep = steps[index];
-    router.push(`/getting-started/${stepTransform(newStep)}`);
+    const newStep = steps[index] as StepsType[number];
+    router.push(`/profile-build/${role}/${stepTransform(newStep, steps)}`);
   };
 
   const currentStepIndex = steps.indexOf(currentStep);
-
   return (
     <div
       className={classNames(
@@ -129,10 +135,10 @@ const OnboardingPage = (props: PageProps) => {
             <div className="mx-auto px-4 sm:max-w-[520px]">
               <header>
                 <p className="font-cal mb-3 text-[28px] font-medium leading-7">
-                  {headers[currentStepIndex]?.title || "Undefined title"}
+                  {headers[currentStep]?.title || "Undefined title"}
                 </p>
 
-                {headers[currentStepIndex]?.subtitle.map((subtitle, index) => (
+                {headers[currentStep]?.subtitle.map((subtitle, index) => (
                   <p className="text-subtle font-sans text-sm font-normal" key={index}>
                     {subtitle}
                   </p>
@@ -143,23 +149,30 @@ const OnboardingPage = (props: PageProps) => {
             <StepCard>
               <Suspense fallback={<Icon name="loader" />}>
                 {currentStep === "user-settings" && (
-                  <UserSettings nextStep={() => goToIndex(1)} hideUsername={from === "signup"} />
+                  <UserSettings
+                    nextStep={() => goToIndex(currentStepIndex + 1)}
+                    hideUsername={from === "signup"}
+                  />
                 )}
-                {currentStep === "connected-calendar" && <ConnectedCalendars nextStep={() => goToIndex(2)} />}
+                {currentStep === "connected-calendar" && (
+                  <ConnectedCalendars nextStep={() => goToIndex(currentStepIndex + 1)} />
+                )}
 
-                {currentStep === "connected-video" && <ConnectedVideoStep nextStep={() => goToIndex(3)} />}
+                {currentStep === "connected-video" && (
+                  <ConnectedVideoStep nextStep={() => goToIndex(currentStepIndex + 1)} />
+                )}
 
                 {currentStep === "setup-availability" && (
                   <SetupAvailability
-                    nextStep={() => goToIndex(4)}
+                    nextStep={() => goToIndex(currentStepIndex + 1)}
                     defaultScheduleId={user.defaultScheduleId}
                   />
                 )}
-                {currentStep === "user-profile" && <UserProfile />}
+                {currentStep === "user-profile" && <UserProfile role={role} />}
               </Suspense>
             </StepCard>
 
-            {headers[currentStepIndex]?.skipText && (
+            {headers[currentStep]?.skipText && (
               <div className="flex w-full flex-row justify-center">
                 <Button
                   color="minimal"
@@ -169,7 +182,7 @@ const OnboardingPage = (props: PageProps) => {
                     goToIndex(currentStepIndex + 1);
                   }}
                   className="mt-8 cursor-pointer px-4 py-2 font-sans text-sm font-medium">
-                  {headers[currentStepIndex]?.skipText}
+                  {headers[currentStep]?.skipText}
                 </Button>
               </div>
             )}

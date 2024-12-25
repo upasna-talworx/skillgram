@@ -345,6 +345,10 @@ model User {
   referralLinkId             String?
   features                   UserFeatures[]
   reassignedBookings         Booking[]                    @relation("reassignByUser")
+  Candidate                  Candidate?
+  Panellist                  Panellist?
+  Client                     Client?
+  Admin                      Admin?
 
   @@unique([email])
   @@unique([email, username])
@@ -355,6 +359,58 @@ model User {
   @@index([identityProvider])
   @@index([identityProviderId])
   @@map(name: "users")
+}
+
+model Candidate {
+  userId    Int      @id
+  name      String
+  image     String
+  bio       String
+  resume    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  User User @relation(fields: [userId], references: [id])
+}
+
+model Panellist {
+  userId            Int      @id
+  name              String
+  company           String
+  yearsOfExperience Int
+  skills            String[]
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  User User @relation(fields: [userId], references: [id])
+}
+
+model Client {
+  userId    Int      @id
+  companyId Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  User    User    @relation(fields: [userId], references: [id])
+  Company Company @relation(fields: [companyId], references: [id])
+}
+
+model Company {
+  id          Int      @id @default(autoincrement())
+  companyName String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  Clients Client[]
+}
+
+model Admin {
+  userId    Int      @id
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  User User @relation(fields: [userId], references: [id])
 }
 
 model NotificationsSubscriptions {

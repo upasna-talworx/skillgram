@@ -21,6 +21,10 @@ import { teamsAndUserProfilesQuery } from "./procedures/teamsAndUserProfilesQuer
 import { ZRemoveNotificationsSubscriptionInputSchema } from "./removeNotificationsSubscription.schema";
 import { ZRoutingFormOrderInputSchema } from "./routingFormOrder.schema";
 import { ZSetDestinationCalendarInputSchema } from "./setDestinationCalendar.schema";
+import { ZAdminSetupInputSchema } from "./setupAdmin.schema";
+import { ZCandidateSetupInputSchema } from "./setupCandidate.schema";
+import { ZClientSetupInputSchema } from "./setupClient.schema";
+import { ZPanellistSetupInputSchema } from "./setupPanellist.schema";
 import { ZSubmitFeedbackInputSchema } from "./submitFeedback.schema";
 import { ZUpdateProfileInputSchema } from "./updateProfile.schema";
 import { ZUpdateUserDefaultConferencingAppInputSchema } from "./updateUserDefaultConferencingApp.schema";
@@ -43,6 +47,11 @@ type AppsRouterHandlerCache = {
   appCredentialsByType?: typeof import("./appCredentialsByType.handler").appCredentialsByTypeHandler;
   stripeCustomer?: typeof import("./stripeCustomer.handler").stripeCustomerHandler;
   updateProfile?: typeof import("./updateProfile.handler").updateProfileHandler;
+  setupAdmin?: typeof import("./setupAdmin.handler").setupAdminHandler;
+  setupCandidate?: typeof import("./setupCandidate.handler").setupCandidateHandler;
+  setupPanellist?: typeof import("./setupPanellist.handler").setupPanellistHandler;
+  setupClient?: typeof import("./setupClient.handler").setupClientHandler;
+  fetchCompanies?: typeof import("./fetchCompanies.handler").fetchCompaniesHandler;
   eventTypeOrder?: typeof import("./eventTypeOrder.handler").eventTypeOrderHandler;
   routingFormOrder?: typeof import("./routingFormOrder.handler").routingFormOrderHandler;
   workflowOrder?: typeof import("./workflowOrder.handler").workflowOrderHandler;
@@ -203,6 +212,75 @@ export const loggedInViewerRouter = router({
     }
 
     return UNSTABLE_HANDLER_CACHE.updateProfile({ ctx, input });
+  }),
+
+  setupAdmin: authedProcedure.input(ZAdminSetupInputSchema).mutation(async ({ ctx, input }) => {
+    if (!UNSTABLE_HANDLER_CACHE.setupAdmin) {
+      UNSTABLE_HANDLER_CACHE.setupAdmin = (await import("./setupAdmin.handler")).setupAdminHandler;
+    }
+
+    // Unreachable code but required for type safety
+    if (!UNSTABLE_HANDLER_CACHE.setupAdmin) {
+      throw new Error("Failed to load handler");
+    }
+
+    return UNSTABLE_HANDLER_CACHE.setupAdmin({ ctx, input });
+  }),
+
+  setupCandidate: authedProcedure.input(ZCandidateSetupInputSchema).mutation(async ({ ctx, input }) => {
+    if (!UNSTABLE_HANDLER_CACHE.setupCandidate) {
+      UNSTABLE_HANDLER_CACHE.setupCandidate = (
+        await import("./setupCandidate.handler")
+      ).setupCandidateHandler;
+    }
+
+    // Unreachable code but required for type safety
+    if (!UNSTABLE_HANDLER_CACHE.setupCandidate) {
+      throw new Error("Failed to load handler");
+    }
+
+    return UNSTABLE_HANDLER_CACHE.setupCandidate({ ctx, input });
+  }),
+
+  setupPanellist: authedProcedure.input(ZPanellistSetupInputSchema).mutation(async ({ ctx, input }) => {
+    if (!UNSTABLE_HANDLER_CACHE.setupPanellist) {
+      UNSTABLE_HANDLER_CACHE.setupPanellist = (
+        await import("./setupPanellist.handler")
+      ).setupPanellistHandler;
+    }
+
+    // Unreachable code but required for type safety
+    if (!UNSTABLE_HANDLER_CACHE.setupPanellist) {
+      throw new Error("Failed to load handler");
+    }
+
+    return UNSTABLE_HANDLER_CACHE.setupPanellist({ ctx, input });
+  }),
+
+  setupClient: authedProcedure.input(ZClientSetupInputSchema).mutation(async ({ ctx, input }) => {
+    if (!UNSTABLE_HANDLER_CACHE.setupClient) {
+      UNSTABLE_HANDLER_CACHE.setupClient = (await import("./setupClient.handler")).setupClientHandler;
+    }
+
+    // Unreachable code but required for type safety
+    if (!UNSTABLE_HANDLER_CACHE.setupClient) {
+      throw new Error("Failed to load handler");
+    }
+
+    return UNSTABLE_HANDLER_CACHE.setupClient({ ctx, input });
+  }),
+
+  fetchCompanies: authedProcedure.query(async ({}) => {
+    // Lazy load the handler and cache it for performance
+    if (!UNSTABLE_HANDLER_CACHE.fetchCompanies) {
+      UNSTABLE_HANDLER_CACHE.fetchCompanies = (
+        await import("./fetchCompanies.handler")
+      ).fetchCompaniesHandler;
+    }
+
+    // Use the cached handler to fetch the data
+    const fetchCompaniesHandler = UNSTABLE_HANDLER_CACHE.fetchCompanies;
+    return fetchCompaniesHandler();
   }),
 
   unlinkConnectedAccount: authedProcedure.mutation(async (opts) => {
