@@ -36,7 +36,14 @@ const navigation: NavigationItemType[] = [
     onlyDesktop: true,
     badge: <TeamInviteBadge />,
   },
-
+  {
+    name: "jobs",
+    href: "/client",
+  },
+  {
+    name: "connect_panellists_to_event",
+    href: "/connect",
+  },
   {
     name: MORE_SEPARATOR_NAME,
     href: "/more",

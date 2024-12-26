@@ -11,7 +11,7 @@ type ListOptions = {
   };
 };
 
-export const listJobsHandler = async ({ ctx }: ListOptions) => {
+export const getApplicationsHandler = async ({ ctx }: ListOptions) => {
   const { user } = ctx;
   const candidateId = user.id;
   const candidateEmail = user.email;

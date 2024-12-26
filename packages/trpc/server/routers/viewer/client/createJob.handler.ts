@@ -4,7 +4,6 @@ import type { TrpcSessionUser } from "@calcom/trpc/server/trpc";
 
 import { TRPCError } from "@trpc/server";
 
-import { addHiringManagerHandler } from "./addHiringManager.handler";
 import type { CreateJobSchema } from "./createJob.schema";
 
 type createJobInput = {
@@ -28,11 +27,6 @@ export const createJobHandler = async ({ ctx, input }: createJobInput) => {
         skillsRequired: input.skillsRequired,
       },
     });
-
-    // rounds no longer taken input with creation of job
-    // const jobRounds = createJobRoundsHandler({jobId: job.jobId, rounds: input.rounds})
-
-    const hiringManagers = addHiringManagerHandler({ input: input.hiringManagers });
 
     // add (job, client) to JobClient relation
     const clientId = user.id;

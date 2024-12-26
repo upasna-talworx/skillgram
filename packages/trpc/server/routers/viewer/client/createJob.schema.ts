@@ -6,10 +6,6 @@ export const ZCreateJobSchema = z.object({
   yearsOfExperience: z.number(),
   jobTitle: z.string(),
   skillsRequired: z.array(z.string()),
-  hiringManagers: z.object({
-    jobId: z.number(),
-    emails: z.array(z.string()),
-  }),
 });
 
 export type CreateJobSchema = z.infer<typeof ZCreateJobSchema>;

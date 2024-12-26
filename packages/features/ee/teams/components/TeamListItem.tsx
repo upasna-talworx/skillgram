@@ -103,7 +103,8 @@ export default function TeamListItem(props: Props) {
         className="inline-flex justify-center"
       />
       <div className="ms-3 inline-block truncate">
-        <span className="text-default text-sm font-bold">{team.name}</span>
+        <span className="text-default text-sm font-bold">{team.name} </span>
+        <Badge variant="gray">{team.id}</Badge>
         <span className="text-muted block text-xs">
           {team.slug ? `${teamUrl}` : <Badge>{t("upgrade")}</Badge>}
         </span>

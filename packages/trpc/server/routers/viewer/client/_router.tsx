@@ -13,8 +13,7 @@ type ClientRouterHandlerCache = {
   createJob?: typeof import("./createJob.handler").createJobHandler;
   createJobRounds?: typeof import("./createJobRound.handler").createJobRoundsHandler;
   getJob?: typeof import("./getJob.handler").getJobHandler;
-  deleteJob?: typeof import("./deleteJob.handler").deleteJobHandler;
-  updateJob?: typeof import("./updateJob.handler").updateJobHandler;
+  // deleteJob?: typeof import("./deleteJob.handler").deleteJobHandler;
   getJobRound?: typeof import("./getJobRound.handler").getJobRoundHandler;
   addHiringManager?: typeof import("./addHiringManager.handler").addHiringManagerHandler;
   connectTeam?: typeof import("./connectTeam.handler").connectTeamHandler;

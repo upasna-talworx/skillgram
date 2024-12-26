@@ -1,44 +1,39 @@
 import logger from "@calcom/lib/logger";
 import { prisma } from "@calcom/prisma";
+import type { TrpcSessionUser } from "@calcom/trpc/server/trpc";
 
 import { TRPCError } from "@trpc/server";
 
 import type { AddHiringManagerSchema } from "./addHiringManager.schema";
 
 type addHiringManager = {
+  ctx: {
+    user: NonNullable<TrpcSessionUser>;
+  };
   input: AddHiringManagerSchema;
 };
 
-export const addHiringManagerHandler = async ({ input }: addHiringManager) => {
+export const addHiringManagerHandler = async ({ ctx, input }: addHiringManager) => {
   // for each email (hiring manager) in input
   try {
-    for (let i = 0; i < input.emails.length; i++) {
-      // 1. fetch the clientId
-      const clientId = await prisma.user.findUnique({
-        where: {
-          email: input.emails[i],
-        },
-        select: {
-          id: true,
-        },
-      });
+    // 1. fetch the clientId
+    const clientId = await prisma.user.findUnique({
+      where: {
+        email: input.email,
+      },
+      select: {
+        id: true,
+      },
+    });
 
-      // 2. populate JobClient relation
-      if (typeof clientId === "number") {
-        await prisma.jobClient.create({
-          data: {
-            jobId: input.jobId,
-            clientId: clientId,
-          },
-        });
-      } else {
-        throw new TRPCError({
-          code: "UNAUTHORIZED",
-          message: "You are not authorised to add hiring managers",
-        });
-      }
-    }
-    // return { message: Hiring Managers added successfully }
+    // 2. populate JobClient relation
+    await prisma.jobClient.create({
+      data: {
+        jobId: input.jobId,
+        clientId: clientId,
+      },
+    });
+    // return ??
   } catch (e) {
     logger.error(e);
     throw new TRPCError({

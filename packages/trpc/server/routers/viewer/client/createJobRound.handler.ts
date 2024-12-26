@@ -14,20 +14,19 @@ type createJobRoundInput = {
 };
 
 export const createJobRoundsHandler = async ({ ctx, input }: createJobRoundInput) => {
-  const { jobId, rounds } = input;
+  const { jobId, roundType, roundNumber, maxScore } = input;
 
   // todo: error handling
   try {
-    for (let i = 0; i < rounds.length; i++) {
-      await prisma.jobRound.create({
-        data: {
-          jobId: jobId,
-          roundType: rounds[i].type,
-          roundNumber: i,
-          maxScore: rounds[i].maxScore,
-        },
-      });
-    }
+    const jobRound = await prisma.jobRound.create({
+      data: {
+        jobId: jobId,
+        roundType: roundType,
+        roundNumber: roundNumber,
+        maxScore: maxScore,
+      },
+    });
+    return { jobRound };
   } catch (e) {
     logger.error(e);
     throw new TRPCError({
