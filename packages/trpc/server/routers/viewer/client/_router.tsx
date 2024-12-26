@@ -1,19 +1,28 @@
 import authedProcedure from "@calcom/trpc/server/procedures/authedProcedure";
 
 import { router } from "../../../trpc";
+import { ZAddHiringManagerSchema } from "./addHiringManager.schema";
+import { ZConnectTeam } from "./connectTeam.schema";
 import { ZCreateJobSchema } from "./createJob.schema";
 import { ZCreateJobRoundSchema } from "./createJobRound.schema";
+import { ZGetJobSchema } from "./getJob.schema";
+import { ZGetJobRoundSchema } from "./getJobRound.schema";
 
-type AdminRouterHandlerCache = {
+type ClientRouterHandlerCache = {
   listJobs?: typeof import("./listJobs.handler").listJobsHandler;
   createJob?: typeof import("./createJob.handler").createJobHandler;
   createJobRounds?: typeof import("./createJobRound.handler").createJobRoundsHandler;
-  // addHiringManager?: typeof import("./addHiringManager.handler").addHiringManagerHandler
+  getJob?: typeof import("./getJob.handler").getJobHandler;
+  deleteJob?: typeof import("./deleteJob.handler").deleteJobHandler;
+  updateJob?: typeof import("./updateJob.handler").updateJobHandler;
+  getJobRound?: typeof import("./getJobRound.handler").getJobRoundHandler;
+  addHiringManager?: typeof import("./addHiringManager.handler").addHiringManagerHandler;
+  connectTeam?: typeof import("./connectTeam.handler").connectTeamHandler;
 };
 
-const UNSTABLE_HANDLER_CACHE: AdminRouterHandlerCache = {};
+const UNSTABLE_HANDLER_CACHE: ClientRouterHandlerCache = {};
 
-export const _adminRouter = router({
+export const clientRouter = router({
   createJob: authedProcedure.input(ZCreateJobSchema).mutation(async ({ ctx, input }) => {
     console.log("TOUCHED THE ROUTE");
     if (!UNSTABLE_HANDLER_CACHE.createJob) {
@@ -52,15 +61,55 @@ export const _adminRouter = router({
 
     return UNSTABLE_HANDLER_CACHE.createJobRounds({ ctx, input });
   }),
-  // addHiringManager: authedProcedure.input(ZAddHiringManagerSchema).mutation(async ({ ctx, input }) => {
-  //     if (!UNSTABLE_HANDLER_CACHE.addHiringManager) {
-  //         UNSTABLE_HANDLER_CACHE.addHiringManager = (await import("./addHiringManager.handler")).addHiringManagerHandler
-  //     }
+  getJob: authedProcedure.input(ZGetJobSchema).query(async ({ ctx, input }) => {
+    if (!UNSTABLE_HANDLER_CACHE.getJob) {
+      UNSTABLE_HANDLER_CACHE.getJob = (await import("./getJob.handler")).getJobHandler;
+    }
 
-  //     if (!UNSTABLE_HANDLER_CACHE.addHiringManager){
-  //         throw new Error("Failed to load handler")
-  //     }
+    // Unreachable code but required for type safety
+    if (!UNSTABLE_HANDLER_CACHE.getJob) {
+      throw new Error("Failed to load handler");
+    }
 
-  //     return UNSTABLE_HANDLER_CACHE.addHiringManager({ ctx, input })
+    return UNSTABLE_HANDLER_CACHE.getJob({ ctx, input });
+  }),
+  // deleteJob: authedProcedure.input(ZDeleteJobSchema).mutation(async ({ ctx, input }) => {
+
   // }),
+  getJobRound: authedProcedure.input(ZGetJobRoundSchema).query(async ({ ctx, input }) => {
+    if (!UNSTABLE_HANDLER_CACHE.getJobRound) {
+      UNSTABLE_HANDLER_CACHE.getJobRound = (await import("./getJobRound.handler")).getJobRoundHandler;
+    }
+
+    // Unreachable code but required for type safety
+    if (!UNSTABLE_HANDLER_CACHE.getJobRound) {
+      throw new Error("Failed to load handler");
+    }
+
+    return UNSTABLE_HANDLER_CACHE.getJobRound({ ctx, input });
+  }),
+  addHiringManager: authedProcedure.input(ZAddHiringManagerSchema).mutation(async ({ ctx, input }) => {
+    if (!UNSTABLE_HANDLER_CACHE.addHiringManager) {
+      UNSTABLE_HANDLER_CACHE.addHiringManager = (
+        await import("./addHiringManager.handler")
+      ).addHiringManagerHandler;
+    }
+
+    if (!UNSTABLE_HANDLER_CACHE.addHiringManager) {
+      throw new Error("Failed to load handler");
+    }
+
+    return UNSTABLE_HANDLER_CACHE.addHiringManager({ ctx, input });
+  }),
+  connectTeam: authedProcedure.input(ZConnectTeam).mutation(async ({ ctx, input }) => {
+    if (!UNSTABLE_HANDLER_CACHE.connectTeam) {
+      UNSTABLE_HANDLER_CACHE.connectTeam = (await import("./connectTeam.handler")).connectTeamHandler;
+    }
+
+    if (!UNSTABLE_HANDLER_CACHE.connectTeam) {
+      throw new Error("Failed to load handler");
+    }
+
+    return UNSTABLE_HANDLER_CACHE.connectTeam({ ctx, input });
+  }),
 });

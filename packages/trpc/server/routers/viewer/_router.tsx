@@ -15,6 +15,8 @@ import { attributesRouter } from "./attributes/_router";
 import { authRouter } from "./auth/_router";
 import { availabilityRouter } from "./availability/_router";
 import { bookingsRouter } from "./bookings/_router";
+import { candidateRouter } from "./candidate/_router";
+import { clientRouter } from "./client/_router";
 import { deploymentSetupRouter } from "./deploymentSetup/_router";
 import { dsyncRouter } from "./dsync/_router";
 import { eventTypesRouter } from "./eventTypes/_router";
@@ -40,6 +42,8 @@ export const viewerRouter = mergeRouters(
     bookings: bookingsRouter,
     eventTypes: eventTypesRouter,
     availability: availabilityRouter,
+    client: clientRouter,
+    candidate: candidateRouter,
     teams: viewerTeamsRouter,
     timezones: timezonesRouter,
     organizations: viewerOrganizationsRouter,

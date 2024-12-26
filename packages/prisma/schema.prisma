@@ -460,12 +460,14 @@ model JobRound {
   roundType   RoundType @default(OTHER)
   roundNumber Int
   maxScore    Int
+  teamId      Int?
   eventTypeId Int?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 
+  team                 Team?                 @relation(fields: [teamId], references: [id])
   eventType            EventType?            @relation(fields: [eventTypeId], references: [id])
-  Job                  Job                   @relation(fields: [jobId], references: [jobId])
+  Job                  Job                   @relation(fields: [jobId], references: [jobId], onDelete: Cascade)
   jobApplicationRounds JobApplicationRound[]
 }
 
@@ -622,6 +624,7 @@ model Team {
   includeManagedEventsInLimits Boolean @default(false)
 
   jobApplicationRound JobApplicationRound[] //a team can have multiple job application rounds
+  jobRound            JobRound[]
 
   @@unique([slug, parentId])
   @@index([parentId])

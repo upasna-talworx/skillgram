@@ -13,17 +13,23 @@ type ListOptions = {
 
 export const listJobsHandler = async ({ ctx }: ListOptions) => {
   const { user } = ctx;
+  const candidateId = user.id;
+  const candidateEmail = user.email;
 
   try {
-    const jobIds = await prisma.jobClient.findMany({
+    const applications = await prisma.jobApplication.findMany({
       where: {
-        clientId: user.id,
+        candidateId: candidateId,
+        candidateEmail: candidateEmail,
       },
       select: {
+        applicationId: true,
         jobId: true,
+        status: true,
+        verdict: true,
       },
     });
-    return { jobs: jobIds };
+    return { applications };
   } catch (e) {
     logger.error(e);
     throw new TRPCError({

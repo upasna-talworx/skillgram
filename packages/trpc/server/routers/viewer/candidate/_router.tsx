@@ -5,6 +5,7 @@ import { ZApplyJobSchema } from "./applyJob.schema";
 
 type CandidateRouterHandlerCache = {
   applyJob?: typeof import("./applyJob.handler").applyJobHandler;
+  getApplications?: typeof import("./getApplications.handler").getApplicationsHandler;
 };
 
 const UNSTABLE_HANDLER_CACHE: CandidateRouterHandlerCache = {};
@@ -20,5 +21,18 @@ export const candidateRouter = router({
     }
 
     return UNSTABLE_HANDLER_CACHE.applyJob({ ctx, input });
+  }),
+  getApplications: authedProcedure.query(async ({ ctx }) => {
+    if (!UNSTABLE_HANDLER_CACHE.getApplications) {
+      UNSTABLE_HANDLER_CACHE.getApplications = (
+        await import("./getApplications.handler")
+      ).getApplicationsHandler;
+    }
+
+    if (!UNSTABLE_HANDLER_CACHE.getApplications) {
+      throw new Error("Failed to load handler");
+    }
+
+    return UNSTABLE_HANDLER_CACHE.getApplications({ ctx });
   }),
 });
