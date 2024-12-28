@@ -14,16 +14,25 @@ type createJobRoundInput = {
 };
 
 export const createJobRoundsHandler = async ({ ctx, input }: createJobRoundInput) => {
-  const { jobId, roundType, roundNumber, maxScore } = input;
+  const { jobId, roundNumber, skills } = input;
 
   // todo: error handling
   try {
     const jobRound = await prisma.jobRound.create({
       data: {
         jobId: jobId,
-        roundType: roundType,
         roundNumber: roundNumber,
-        maxScore: maxScore,
+        JobRoundSkill: {
+          create: skills.map((id) => {
+            return {
+              skill: {
+                connect: {
+                  id: id,
+                },
+              },
+            };
+          }),
+        },
       },
     });
     return { jobRound };

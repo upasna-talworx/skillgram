@@ -264,3 +264,19 @@ export async function createTeamAndAddUsers(
 
   return team;
 }
+
+export async function createSkill(id: number, name: string) {
+  const skill = await prisma.skill.upsert({
+    where: {
+      id: id,
+    },
+    update: {
+      name: name,
+    },
+    create: {
+      id: id,
+      name: name,
+    },
+  });
+  console.log(`${skill.name} created.`);
+}
