@@ -111,4 +111,15 @@ export const clientRouter = router({
 
     return UNSTABLE_HANDLER_CACHE.connectTeam({ ctx, input });
   }),
+  getAllSkills: authedProcedure.query(async () => {
+    if (!UNSTABLE_HANDLER_CACHE.getAllSkills) {
+      UNSTABLE_HANDLER_CACHE.getAllSkills = (await import("./getAllSkills.handler")).getAllSkillsHandler;
+    }
+
+    if (!UNSTABLE_HANDLER_CACHE.getAllSkills) {
+      throw new Error("Failed to load handler");
+    }
+
+    return UNSTABLE_HANDLER_CACHE.getAllSkills();
+  }),
 });
