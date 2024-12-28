@@ -446,6 +446,51 @@ model JobClient {
   @@id([jobId, clientId])
 }
 
+enum Rating {
+  EXCELLENT
+  GOOD
+  AVERAGE
+  BELOW_AVERAGE
+  BAD
+  UNASSIGNED
+}
+
+model Skill {
+  id            Int             @id @default(autoincrement())
+  name          String
+  SkillRating   SkillRating[]
+  JobRoundSkill JobRoundSkill[]
+}
+
+model JobRoundSkill {
+  roundId Int
+  skillId Int
+
+  skill    Skill    @relation(fields: [skillId], references: [id])
+  jobRound JobRound @relation(fields: [roundId], references: [roundId])
+
+  @@id([roundId, skillId])
+}
+
+model SkillRating {
+  id      Int    @id @default(autoincrement())
+  skillId Int
+  rating  Rating @default(UNASSIGNED)
+
+  skill                          Skill                            @relation(fields: [skillId], references: [id])
+  JobApplicationRoundSkillRating JobApplicationRoundSkillRating[]
+}
+
+model JobApplicationRoundSkillRating {
+  skillRatingId         Int
+  jobApplicationRoundId Int
+
+  skillRating         SkillRating         @relation(fields: [skillRatingId], references: [id])
+  jobApplicationRound JobApplicationRound @relation(fields: [jobApplicationRoundId], references: [id])
+
+  @@id([skillRatingId, jobApplicationRoundId])
+}
+
 enum RoundType {
   QUIZ
   INTERVIEW
@@ -457,9 +502,8 @@ enum RoundType {
 model JobRound {
   roundId     Int       @id @default(autoincrement())
   jobId       Int
-  roundType   RoundType @default(OTHER)
+  roundType   RoundType @default(INTERVIEW)
   roundNumber Int
-  maxScore    Int
   teamId      Int?
   eventTypeId Int?
   createdAt   DateTime  @default(now())
@@ -469,6 +513,7 @@ model JobRound {
   eventType            EventType?            @relation(fields: [eventTypeId], references: [id])
   Job                  Job                   @relation(fields: [jobId], references: [jobId], onDelete: Cascade)
   jobApplicationRounds JobApplicationRound[]
+  JobRoundSkill        JobRoundSkill[]
 }
 
 enum Status {
@@ -505,6 +550,7 @@ model JobApplication {
 }
 
 model JobApplicationRound {
+  id            Int      @id @default(autoincrement())
   applicationId Int
   roundId       Int
   jobId         Int
@@ -524,7 +570,7 @@ model JobApplicationRound {
   job            Job            @relation(fields: [jobId], references: [jobId])
   team           Team?          @relation(fields: [teamId], references: [id])
 
-  @@id([applicationId, roundId])
+  JobApplicationRoundSkillRating JobApplicationRoundSkillRating[]
 }
 
 model NotificationsSubscriptions {

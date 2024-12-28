@@ -2,7 +2,6 @@ import { useForm } from "react-hook-form";
 
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { HttpError } from "@calcom/lib/http-error";
-import { RoundType } from "@calcom/prisma/enums";
 import { trpc } from "@calcom/trpc/react";
 import {
   Button,
@@ -14,16 +13,14 @@ import {
   Form,
   InputField,
   showToast,
-  RadioGroup as RadioArea,
 } from "@calcom/ui";
 
 export function NewJobRoundButton({ name = "new-job-round" }: { name?: string }) {
   const { t } = useLocale();
 
   const form = useForm<{
-    roundType: RoundType;
     roundNumber: number;
-    maxScore: number;
+    skills: string;
   }>();
   const { register, setValue } = form;
   const utils = trpc.useUtils();
@@ -100,34 +97,12 @@ export function NewJobRoundButton({ name = "new-job-round" }: { name?: string })
               {...register("roundNumber")}
             />
             <InputField
-              label={t("max_score")}
-              type="number"
-              id="maxScore"
+              label={t("skills_required")}
+              type="string"
+              id="skills"
               required
-              placeholder={t("max_score")}
-              {...register("maxScore")}
+              {...register("skills")}
             />
-            <label htmlFor="roundType">{t("round_type")}</label>
-            <RadioArea.Group
-              onValueChange={(val: RoundType) => {
-                setValue("roundType", val);
-              }}>
-              <RadioArea.Item {...register("roundType")} value={RoundType.QUIZ}>
-                <p>{t("quiz")}</p>
-              </RadioArea.Item>
-              <RadioArea.Item {...register("roundType")} value={RoundType.INTERVIEW}>
-                <p>{t("interview")}</p>
-              </RadioArea.Item>
-              <RadioArea.Item {...register("roundType")} value={RoundType.RESUME_UPLOAD}>
-                <p>{t("resume_upload")}</p>
-              </RadioArea.Item>
-              <RadioArea.Item {...register("roundType")} value={RoundType.AI_INTERVIEW}>
-                <p>{t("ai_interview")}</p>
-              </RadioArea.Item>
-              <RadioArea.Item {...register("roundType")} value={RoundType.OTHER}>
-                <p>{t("other")}</p>
-              </RadioArea.Item>
-            </RadioArea.Group>
           </div>
           <div className="justify-end">
             <DialogFooter showDivider>

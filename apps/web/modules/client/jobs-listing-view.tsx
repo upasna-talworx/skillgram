@@ -4,6 +4,7 @@ import { useState } from "react";
 import { JobListItem } from "@calcom/features/jobs/components/JobListItem";
 import { NewJobButton } from "@calcom/features/jobs/components/NewJobButton";
 import Shell from "@calcom/features/shell/Shell";
+import { useDebounce } from "@calcom/lib/hooks/useDebounce";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { EmptyScreen, TextField, Icon } from "@calcom/ui";
 
