@@ -17,6 +17,7 @@ type ClientRouterHandlerCache = {
   getJobRound?: typeof import("./getJobRound.handler").getJobRoundHandler;
   addHiringManager?: typeof import("./addHiringManager.handler").addHiringManagerHandler;
   connectTeam?: typeof import("./connectTeam.handler").connectTeamHandler;
+  getAllSkills?: typeof import("./getAllSkills.handler").getAllSkillsHandler;
 };
 
 const UNSTABLE_HANDLER_CACHE: ClientRouterHandlerCache = {};
@@ -111,15 +112,17 @@ export const clientRouter = router({
 
     return UNSTABLE_HANDLER_CACHE.connectTeam({ ctx, input });
   }),
-  getAllSkills: authedProcedure.query(async () => {
+  getAllSkills: authedProcedure.query(async (ctx) => {
     if (!UNSTABLE_HANDLER_CACHE.getAllSkills) {
-      UNSTABLE_HANDLER_CACHE.getAllSkills = (await import("./getAllSkills.handler")).getAllSkillsHandler;
+      UNSTABLE_HANDLER_CACHE.getAllSkills = await import("./getAllSkills.handler").then(
+        (mod) => mod.getAllSkillsHandler
+      );
     }
 
     if (!UNSTABLE_HANDLER_CACHE.getAllSkills) {
       throw new Error("Failed to load handler");
     }
 
-    return UNSTABLE_HANDLER_CACHE.getAllSkills();
+    return UNSTABLE_HANDLER_CACHE.getAllSkills(ctx);
   }),
 });

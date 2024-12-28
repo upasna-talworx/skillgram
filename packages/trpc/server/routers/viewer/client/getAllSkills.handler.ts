@@ -3,7 +3,7 @@ import { prisma } from "@calcom/prisma";
 
 import { TRPCError } from "@trpc/server";
 
-export const getAllSkillsHandler = async () => {
+export const getAllSkillsHandler = async (ctx) => {
   try {
     const skills = await prisma.skills.findMany();
     return { skills: skills };

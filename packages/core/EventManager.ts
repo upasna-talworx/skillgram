@@ -5,8 +5,6 @@ import { v5 as uuidv5 } from "uuid";
 import type { z } from "zod";
 
 import { getCalendar } from "@calcom/app-store/_utils/getCalendar";
-import { FAKE_DAILY_CREDENTIAL } from "@calcom/app-store/dailyvideo/lib/VideoApiAdapter";
-import { appKeysSchema as calVideoKeysSchema } from "@calcom/app-store/dailyvideo/zod";
 import { getLocationFromApp, MeetLocationType } from "@calcom/app-store/locations";
 import getApps from "@calcom/app-store/utils";
 import { getUid } from "@calcom/lib/CalEventParser";
@@ -162,10 +160,6 @@ export default class EventManager {
           enabled: true,
         },
       });
-
-      const calVideoKeys = calVideoKeysSchema.safeParse(calVideo?.keys);
-
-      if (calVideo?.enabled && calVideoKeys.success) evt["location"] = "integrations:daily";
     }
 
     // Fallback to Cal Video if Google Meet is selected w/o a Google Cal
@@ -776,12 +770,6 @@ export default class EventManager {
      * This might happen if someone tries to use a location with a missing credential, so we fallback to Cal Video.
      * @todo remove location from event types that has missing credentials
      * */
-    if (!videoCredential) {
-      log.warn(
-        `Falling back to "daily" video integration for event with location: ${event.location} because credential is missing for the app`
-      );
-      videoCredential = { ...FAKE_DAILY_CREDENTIAL };
-    }
 
     return videoCredential;
   }

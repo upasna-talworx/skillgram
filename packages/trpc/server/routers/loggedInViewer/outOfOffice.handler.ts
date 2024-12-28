@@ -1,7 +1,5 @@
-import type { Prisma } from "@prisma/client";
 import { v4 as uuidv4 } from "uuid";
 
-import { selectOOOEntries } from "@calcom/app-store/zapier/api/subscriptions/listOOOEntries";
 import dayjs from "@calcom/dayjs";
 import { sendBookingRedirectNotification } from "@calcom/emails";
 import type { GetSubscriberOptions } from "@calcom/features/webhooks/lib/getWebhooks";
@@ -199,18 +197,7 @@ export const outOfOfficeCreateOrUpdate = async ({ ctx, input }: TBookingRedirect
       toUserId: toUserId ? toUserId : null,
     },
   });
-  let resultRedirect: Prisma.OutOfOfficeEntryGetPayload<{ select: typeof selectOOOEntries }> | null = null;
-  if (createdOrUpdatedOutOfOffice) {
-    const findRedirect = await prisma.outOfOfficeEntry.findFirst({
-      where: {
-        uuid: createdOrUpdatedOutOfOffice.uuid,
-      },
-      select: selectOOOEntries,
-    });
-    if (findRedirect) {
-      resultRedirect = findRedirect;
-    }
-  }
+  const resultRedirect = null;
   if (!resultRedirect) {
     return;
   }

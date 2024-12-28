@@ -1,8 +1,9 @@
 import { useForm } from "react-hook-form";
+import Select from "react-select";
 
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { HttpError } from "@calcom/lib/http-error";
-import { trpc } from "@calcom/trpc/react";
+import { trpc } from "@calcom/trpc";
 import {
   Button,
   Dialog,
@@ -15,6 +16,12 @@ import {
   showToast,
 } from "@calcom/ui";
 
+const options = [
+  { value: "chocolate", label: "Chocolate" },
+  { value: "strawberry", label: "Strawberry" },
+  { value: "vanilla", label: "Vanilla" },
+];
+
 export function NewJobRoundButton({ name = "new-job-round" }: { name?: string }) {
   const { t } = useLocale();
 
@@ -22,12 +29,20 @@ export function NewJobRoundButton({ name = "new-job-round" }: { name?: string })
     roundNumber: number;
     skills: string;
   }>();
-  const { register, setValue } = form;
-  const utils = trpc.useUtils();
+  const { register } = form;
 
   // get jobId from url or somewhere
   const jobId = 1;
 
+  const { data, error, isLoading } = trpc.viewer.client.getAllSkills.useQuery();
+
+  console.log(data, error);
+  // const options = skills.map((skill) => {
+  //   return {
+  //     value: skill.id,
+  //     label: skill.name,
+  //   };
+  // });
   // const createMutation = trpc.viewer.availability.schedule.create.useMutation({
   //   onSuccess: async ({ schedule }) => {
   //     await router.push(`/availability/${schedule.id}${fromEventType ? "?fromEventType=true" : ""}`);
@@ -57,9 +72,9 @@ export function NewJobRoundButton({ name = "new-job-round" }: { name?: string })
         showToast(message, "error");
       }
 
-      if (err.data?.code === "INTERNAL_SERVER_ERROR") {
-        const error = `${err.data.code}: ${t("could_not_create_job_round")}`;
-      }
+      // if (err.data?.code === "INTERNAL_SERVER_ERROR") {
+      //   const error = `${err.data.code}: ${t("could_not_create_job_round")}`;
+      // }
 
       // if (err.data?.code === "BAD_REQUEST") {
       //   error = `${err.data.code}: ${t("error_event_type_url_duplicate")}`;
@@ -84,7 +99,7 @@ export function NewJobRoundButton({ name = "new-job-round" }: { name?: string })
           form={form}
           handleSubmit={(input) => {
             const values = { jobId: jobId, ...input };
-            createMutation.mutate(values);
+            // createMutation.mutate(values);
             console.log(values);
           }}>
           <div className="mt-3 space-y-6 pb-11">
@@ -96,13 +111,7 @@ export function NewJobRoundButton({ name = "new-job-round" }: { name?: string })
               placeholder={t("round_number")}
               {...register("roundNumber")}
             />
-            <InputField
-              label={t("skills_required")}
-              type="string"
-              id="skills"
-              required
-              {...register("skills")}
-            />
+            <Select isMulti options={options} />
           </div>
           <div className="justify-end">
             <DialogFooter showDivider>

@@ -4,7 +4,6 @@ import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { Fragment, useState } from "react";
 import { z } from "zod";
 
-import { WipeMyCalActionButton } from "@calcom/app-store/wipemycalother/components";
 import dayjs from "@calcom/dayjs";
 import { FilterToggle } from "@calcom/features/bookings/components/FilterToggle";
 import { FiltersContainer } from "@calcom/features/bookings/components/FiltersContainer";
@@ -167,7 +166,6 @@ export default function Bookings() {
               <>
                 {!!bookingsToday.length && status === "upcoming" && (
                   <div className="mb-6 pt-2 xl:pt-0">
-                    <WipeMyCalActionButton bookingStatus={status} bookingsEmpty={isEmpty} />
                     <p className="text-subtle mb-2 text-xs font-medium uppercase leading-4">{t("today")}</p>
                     <div className="border-subtle overflow-hidden rounded-md border">
                       <table className="w-full max-w-full table-fixed">
