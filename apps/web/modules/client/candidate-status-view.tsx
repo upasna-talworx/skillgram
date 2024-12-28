@@ -1,42 +1,44 @@
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { useRouter } from "next/navigation";
 
-import { JobRoundListItem } from "@calcom/features/jobs/components/JobRoundListItem";
-import { NewJobRoundButton } from "@calcom/features/jobs/components/NewJobRoundButton";
+import { AddCandidateButton } from "@calcom/features/jobs/components/AddCandidateButton";
+import { CandidateListItem } from "@calcom/features/jobs/components/CandidateListItem";
 import Shell from "@calcom/features/shell/Shell";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { EmptyScreen } from "@calcom/ui";
 
-function JobRoundsList() {
+function CandidatesList() {
   const { t } = useLocale();
   const [animationParentRef] = useAutoAnimate<HTMLUListElement>();
+  // get jobId from url or somewhere
   const router = useRouter();
   const { job } = router.query;
   const jobId = parseInt(job, 10);
-  // const jobRounds = trpc.viewer.client.getJobRound.useQuery({ jobId: jobId })
-  const jobRounds = [
-    { jobId: jobId, roundId: 1, roundType: "QUIZ", roundNumber: 1, maxScore: 10 },
-    { jobId: jobId, roundId: 2, roundType: "INTERVIEW", roundNumber: 2, maxScore: 20 },
+  // const candidates = trpc.viewer.client.listCandidate.useQuery({ jobId: jobId })
+  const candidates = [
+    { candidateId: 1, candidateEmail: "abc@mail.com", status: "EMAIL_SENT", verdict: "NOT_APPLICABLE" },
+    { candidateId: 2, candidateEmail: "xyz@mail.com", status: "COMPLETED", verdict: "HIRE" },
+    { candidateId: 3, candidateEmail: "pqr@mail.com", status: "IN_PROCESS", verdict: "NOT_APPLICABLE" },
   ];
 
   return (
     <>
-      {jobRounds.length === 0 ? (
+      {candidates.length === 0 ? (
         <div className="flex justify-center">
           <EmptyScreen
             Icon="clock"
-            headline={t("new_job_heading")}
-            description={t("new_job_description")}
+            headline={t("candidate_status_page_heading")}
+            description={t("candidate_status_page_description")}
             className="w-full"
-            buttonRaw={<NewJobRoundButton />}
+            buttonRaw={<AddCandidateButton />}
           />
         </div>
       ) : (
         <>
           <div className="border-subtle bg-default overflow-hidden rounded-md border">
             <ul className="divide-subtle divide-y" data-testid="jobs" ref={animationParentRef}>
-              {jobRounds.map((jobRound) => (
-                <JobRoundListItem key={jobRound.roundId} jobRound={jobRound} />
+              {candidates.map((candidate) => (
+                <CandidateListItem key={candidate.candidateId} candidate={candidate} />
               ))}
             </ul>
           </div>
@@ -46,7 +48,7 @@ function JobRoundsList() {
   );
 }
 
-const JobSingleView = () => {
+const CandidatesListingPage = () => {
   const { t } = useLocale();
   const router = useRouter();
   const { job } = router.query;
@@ -57,16 +59,16 @@ const JobSingleView = () => {
   return (
     <Shell
       withoutMain={false}
-      title="Job Rounds"
-      description="Add Evaluating Rounds specific to your Job"
+      title="Candidate Status"
+      description="Monitor the status of Applied Candidates"
       backPath="/client"
       heading={data.jobTitle}
       hideHeadingOnMobile
-      subtitle={t("job_round_list_page_subtitle")}
-      CTA={<NewJobRoundButton />}>
-      <JobRoundsList />
+      subtitle={t("Monitor the status of Applied Candidates")}
+      CTA={<AddCandidateButton />}>
+      <CandidatesList />
     </Shell>
   );
 };
 
-export default JobSingleView;
+export default CandidatesListingPage;

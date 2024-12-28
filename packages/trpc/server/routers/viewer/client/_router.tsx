@@ -1,12 +1,14 @@
 import authedProcedure from "@calcom/trpc/server/procedures/authedProcedure";
 
 import { router } from "../../../trpc";
+import { ZAddCandidateSchema } from "./addCandidate.schema";
 import { ZAddHiringManagerSchema } from "./addHiringManager.schema";
 import { ZConnectTeam } from "./connectTeam.schema";
 import { ZCreateJobSchema } from "./createJob.schema";
 import { ZCreateJobRoundSchema } from "./createJobRound.schema";
 import { ZGetJobSchema } from "./getJob.schema";
 import { ZGetJobRoundSchema } from "./getJobRound.schema";
+import { ZListCandidateSchema } from "./listCandidates.schema";
 
 type ClientRouterHandlerCache = {
   listJobs?: typeof import("./listJobs.handler").listJobsHandler;
@@ -17,7 +19,8 @@ type ClientRouterHandlerCache = {
   getJobRound?: typeof import("./getJobRound.handler").getJobRoundHandler;
   addHiringManager?: typeof import("./addHiringManager.handler").addHiringManagerHandler;
   connectTeam?: typeof import("./connectTeam.handler").connectTeamHandler;
-  getAllSkills?: typeof import("./getAllSkills.handler").getAllSkillsHandler;
+  addCandidate?: typeof import("./addCandidate.handler").addCandidateHandler;
+  listCandidate?: typeof import("./listCandidates.handler").listCandidateHandler;
 };
 
 const UNSTABLE_HANDLER_CACHE: ClientRouterHandlerCache = {};
@@ -112,17 +115,26 @@ export const clientRouter = router({
 
     return UNSTABLE_HANDLER_CACHE.connectTeam({ ctx, input });
   }),
-  getAllSkills: authedProcedure.query(async (ctx) => {
-    if (!UNSTABLE_HANDLER_CACHE.getAllSkills) {
-      UNSTABLE_HANDLER_CACHE.getAllSkills = await import("./getAllSkills.handler").then(
-        (mod) => mod.getAllSkillsHandler
-      );
+  addCandidate: authedProcedure.input(ZAddCandidateSchema).mutation(async ({ ctx, input }) => {
+    if (!UNSTABLE_HANDLER_CACHE.addCandidate) {
+      UNSTABLE_HANDLER_CACHE.addCandidate = (await import("./addCandidate.handler")).addCandidateHandler;
     }
 
-    if (!UNSTABLE_HANDLER_CACHE.getAllSkills) {
+    if (!UNSTABLE_HANDLER_CACHE.addCandidate) {
       throw new Error("Failed to load handler");
     }
 
-    return UNSTABLE_HANDLER_CACHE.getAllSkills(ctx);
+    return UNSTABLE_HANDLER_CACHE.addCandidate({ ctx, input });
+  }),
+  listCandidate: authedProcedure.input(ZListCandidateSchema).query(async ({ ctx, input }) => {
+    if (!UNSTABLE_HANDLER_CACHE.listCandidate) {
+      UNSTABLE_HANDLER_CACHE.listCandidate = (await import("./listCandidates.handler")).listCandidateHandler;
+    }
+
+    if (!UNSTABLE_HANDLER_CACHE.listCandidate) {
+      throw new Error("Failed to load handler");
+    }
+
+    return UNSTABLE_HANDLER_CACHE.listCandidate({ ctx, input });
   }),
 });

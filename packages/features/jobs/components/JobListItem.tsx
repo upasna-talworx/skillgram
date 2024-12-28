@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 import { AddHiringManagerButton } from "@calcom/features/jobs/components/AddHiringManagerButton";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
@@ -8,6 +9,7 @@ type JobType = { jobId: number };
 
 export function JobListItem({ job }: { job: JobType }) {
   const { t } = useLocale();
+  const router = useRouter();
   // const { data } = trpc.viewer.client.getJob.useQuery({ jobId: job.jobId })
   const data = { jobTitle: "JAVA Developer" };
 
@@ -35,6 +37,16 @@ export function JobListItem({ job }: { job: JobType }) {
             <>
               <Tooltip content={t("add_hiring_managers")}>
                 <AddHiringManagerButton jobId={job.jobId} />
+              </Tooltip>
+              <Tooltip content={t("list_candidates")}>
+                <Button
+                  color="minimal"
+                  variant="icon"
+                  StartIcon="users"
+                  onClick={() => {
+                    router.push(`client/jobs/${job.jobId}/candidate-status`);
+                  }}
+                />
               </Tooltip>
               <Tooltip content={t("delete")}>
                 <Button

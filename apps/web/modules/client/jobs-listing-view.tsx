@@ -8,8 +8,6 @@ import { useDebounce } from "@calcom/lib/hooks/useDebounce";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { EmptyScreen, TextField, Icon } from "@calcom/ui";
 
-// import { useDebounce } from "@calcom/lib/hooks/useDebounce";
-
 function JobsList() {
   const { t } = useLocale();
   const [animationParentRef] = useAutoAnimate<HTMLUListElement>();
