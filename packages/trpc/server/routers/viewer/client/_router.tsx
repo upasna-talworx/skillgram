@@ -21,6 +21,7 @@ type ClientRouterHandlerCache = {
   connectTeam?: typeof import("./connectTeam.handler").connectTeamHandler;
   addCandidate?: typeof import("./addCandidate.handler").addCandidateHandler;
   listCandidate?: typeof import("./listCandidates.handler").listCandidateHandler;
+  getAllSkills?: typeof import("./getAllSkills.handler").getAllSkillsHandler;
 };
 
 const UNSTABLE_HANDLER_CACHE: ClientRouterHandlerCache = {};
@@ -136,5 +137,16 @@ export const clientRouter = router({
     }
 
     return UNSTABLE_HANDLER_CACHE.listCandidate({ ctx, input });
+  }),
+  getAllSkills: authedProcedure.query(async ({ ctx }) => {
+    if (!UNSTABLE_HANDLER_CACHE.getAllSkills) {
+      UNSTABLE_HANDLER_CACHE.getAllSkills = (await import("./getAllSkills.handler")).getAllSkillsHandler;
+    }
+
+    if (!UNSTABLE_HANDLER_CACHE.getAllSkills) {
+      throw new Error("Failed to load handler");
+    }
+
+    return UNSTABLE_HANDLER_CACHE.getAllSkills({ ctx });
   }),
 });

@@ -5,7 +5,7 @@ import { TRPCError } from "@trpc/server";
 
 export const getAllSkillsHandler = async (ctx) => {
   try {
-    const skills = await prisma.skills.findMany();
+    const skills = await prisma.Skill.findMany();
     return { skills: skills };
   } catch (e) {
     logger.error(e);

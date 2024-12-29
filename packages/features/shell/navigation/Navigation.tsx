@@ -39,10 +39,12 @@ const navigation: NavigationItemType[] = [
   {
     name: "jobs",
     href: "/client",
+    icon: "folder",
   },
   {
     name: "connect_panellists_to_event",
     href: "/connect",
+    icon: "link",
   },
   {
     name: MORE_SEPARATOR_NAME,

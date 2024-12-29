@@ -16,12 +16,6 @@ import {
   showToast,
 } from "@calcom/ui";
 
-const options = [
-  { value: "chocolate", label: "Chocolate" },
-  { value: "strawberry", label: "Strawberry" },
-  { value: "vanilla", label: "Vanilla" },
-];
-
 export function NewJobRoundButton({ name = "new-job-round" }: { name?: string }) {
   const { t } = useLocale();
 
@@ -35,14 +29,16 @@ export function NewJobRoundButton({ name = "new-job-round" }: { name?: string })
   const jobId = 1;
 
   const { data, error, isLoading } = trpc.viewer.client.getAllSkills.useQuery();
-
-  console.log(data, error);
-  // const options = skills.map((skill) => {
-  //   return {
-  //     value: skill.id,
-  //     label: skill.name,
-  //   };
-  // });
+  let options = [];
+  if (!isLoading) {
+    const skills = data.skills;
+    options = skills.map((skill) => {
+      return {
+        value: skill.id,
+        label: skill.name,
+      };
+    });
+  }
   // const createMutation = trpc.viewer.availability.schedule.create.useMutation({
   //   onSuccess: async ({ schedule }) => {
   //     await router.push(`/availability/${schedule.id}${fromEventType ? "?fromEventType=true" : ""}`);

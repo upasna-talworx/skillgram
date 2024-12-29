@@ -11,6 +11,7 @@ function JobRoundsList() {
   const { t } = useLocale();
   const [animationParentRef] = useAutoAnimate<HTMLUListElement>();
   const router = useRouter();
+  console.log(router);
   const { job } = router.query;
   const jobId = parseInt(job, 10);
   // const jobRounds = trpc.viewer.client.getJobRound.useQuery({ jobId: jobId })
