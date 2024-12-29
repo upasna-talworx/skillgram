@@ -1,9 +1,12 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import type { z } from "zod";
 
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { HttpError } from "@calcom/lib/http-error";
 import { trpc } from "@calcom/trpc/react";
+import { ZCreateJobSchema } from "@calcom/trpc/server/routers/viewer/client/createJob.schema";
 import {
   Button,
   Dialog,
@@ -22,58 +25,53 @@ export function NewJobButton({ name = "new-job" }: { name?: string }) {
   const router = useRouter();
   const { t } = useLocale();
 
-  const form = useForm<{
-    jobTitle: string;
-    yearsOfExperience: number;
-    jobDescription: string;
-    skillsRequired: string;
-  }>();
-  const { register } = form;
-  const utils = trpc.useUtils();
+  const form = useForm<z.infer<typeof ZCreateJobSchema>>({
+    resolver: zodResolver(ZCreateJobSchema),
+    mode: "onChange",
+  });
 
-  // const createMutation = trpc.viewer.availability.schedule.create.useMutation({
-  //   onSuccess: async ({ schedule }) => {
-  //     await router.push(`/availability/${schedule.id}${fromEventType ? "?fromEventType=true" : ""}`);
-  //     showToast(t("schedule_created_successfully", { scheduleName: schedule.name }), "success");
-  //     utils.viewer.availability.list.setData(undefined, (data) => {
-  //       const newSchedule = { ...schedule, isDefault: false, availability: [] };
-  //       if (!data)
-  //         return {
-  //           schedules: [newSchedule],
-  //         };
-  //       return {
-  //         ...data,
-  //         schedules: [...data.schedules, newSchedule],
-  //       };
-  //     });
-  //   }
+  const { handleSubmit, register } = form;
+
+  const utils = trpc.useUtils();
 
   const createMutation = trpc.viewer.client.createJob.useMutation({
     onSuccess: async ({ job }) => {
       console.log(job);
       await router.push(`/client/jobs/${job.jobId}`);
       showToast(t("job_created_successfully", { jobTitle: job.jobTitle }), "success");
-      // to be handled
     },
     onError: (err) => {
       if (err instanceof HttpError) {
         const message = `${err.statusCode}: ${err.message}`;
         showToast(message, "error");
+      } else if (err.data?.code === "INTERNAL_SERVER_ERROR") {
+        const message = `${err.data.code}: ${t("could_not_create_job")}`;
+        showToast(message, "error");
+      } else if (err.data?.code === "BAD_REQUEST") {
+        const message = `${err.data.code}: ${t("error_event_type_url_duplicate")}`;
+        showToast(message, "error");
+      } else if (err.data?.code === "UNAUTHORIZED") {
+        const message = `${err.data.code}: ${t("error_job_unauthorized_create")}`;
+        showToast(message, "error");
       }
-
-      if (err.data?.code === "INTERNAL_SERVER_ERROR") {
-        const error = `${err.data.code}: ${t("could_not_create_job")}`;
-      }
-
-      // if (err.data?.code === "BAD_REQUEST") {
-      //   error = `${err.data.code}: ${t("error_event_type_url_duplicate")}`;
-      // }
-
-      // if (err.data?.code === "UNAUTHORIZED") {
-      //   const message = `${err.data.code}: ${t("error_job_unauthorized_create")}`;
-      //   showToast(message, "error");
-      // }
     },
+  });
+
+  const onSubmit = handleSubmit(async (data: z.infer<typeof ZCreateJobSchema>) => {
+    console.log("Handle Submit successful");
+    try {
+      // Process skillsRequired into an array
+      const processedData = {
+        ...data,
+      };
+
+      // Submit the processed data using the mutation
+      await createMutation.mutateAsync(processedData);
+
+      console.log("Job created successfully:", processedData);
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    }
   });
 
   return (
@@ -84,15 +82,7 @@ export function NewJobButton({ name = "new-job" }: { name?: string }) {
         </Button>
       </DialogTrigger>
       <DialogContent title={t("create_new_job")}>
-        <Form
-          form={form}
-          handleSubmit={(input) => {
-            // split skills string by ',' and convert to array of strings skills
-            const values = JSON.parse(JSON.stringify(input));
-            values.skillsRequired = input.skillsRequired.split(",");
-            createMutation.mutate(values);
-            console.log(values);
-          }}>
+        <Form form={form} onSubmit={onSubmit}>
           <div className="mt-3 space-y-6 pb-11">
             <InputField
               label={t("job_title")}
@@ -108,15 +98,17 @@ export function NewJobButton({ name = "new-job" }: { name?: string }) {
               id="yearsOfExperience"
               required
               placeholder={t("years_of_experience")}
-              {...register("yearsOfExperience")}
+              {...register("yearsOfExperience", { valueAsNumber: true })}
             />
-            <div>Upload JD</div>
-            <FileUploader />
+            <div>
+              <label htmlFor="uploadJD">{t("upload_job_description")}</label>
+              <FileUploader />
+            </div>
           </div>
-          <div className="justify-end">
+          <div className="flex justify-end">
             <DialogFooter showDivider>
               <DialogClose />
-              <Button type="submit" loading={createMutation.isPending}>
+              <Button type="submit" loading={createMutation.isPending} disabled={createMutation.isPending}>
                 {t("continue")}
               </Button>
             </DialogFooter>

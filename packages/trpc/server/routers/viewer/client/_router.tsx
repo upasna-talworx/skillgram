@@ -36,7 +36,7 @@ export const clientRouter = router({
     if (!UNSTABLE_HANDLER_CACHE.createJob) {
       throw new Error("Failed to load handler");
     }
-
+    console.log("This is line 39");
     return UNSTABLE_HANDLER_CACHE.createJob({ ctx, input });
   }),
   listJobs: authedProcedure.query(async ({ ctx }) => {

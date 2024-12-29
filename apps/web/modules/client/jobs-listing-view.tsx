@@ -63,7 +63,7 @@ function JobsList() {
   //       }
   //     },
   //   });
-
+  // console.log(jobs);
   return (
     <>
       {jobs.length === 0 ? (

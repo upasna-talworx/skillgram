@@ -15,16 +15,16 @@ type createJobInput = {
 
 export const createJobHandler = async ({ ctx, input }: createJobInput) => {
   const { user } = ctx;
-  console.log("THIS IS CONTEXT", ctx);
+  console.log(user.id);
   console.log("THIS IS INPUT", input);
   // add job to database
   try {
     const job = await prisma.job.create({
       data: {
-        jobDescription: input.jobDescription,
+        jobDescription: "",
         yearsOfExperience: input.yearsOfExperience,
         jobTitle: input.jobTitle,
-        skillsRequired: input.skillsRequired,
+        skillsRequired: [],
       },
     });
 
