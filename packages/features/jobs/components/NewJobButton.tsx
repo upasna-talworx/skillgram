@@ -16,6 +16,8 @@ import {
   showToast,
 } from "@calcom/ui";
 
+import { FileUploader } from "./FileUploader";
+
 export function NewJobButton({ name = "new-job" }: { name?: string }) {
   const router = useRouter();
   const { t } = useLocale();
@@ -108,22 +110,8 @@ export function NewJobButton({ name = "new-job" }: { name?: string }) {
               placeholder={t("years_of_experience")}
               {...register("yearsOfExperience")}
             />
-            <InputField
-              label={t("Skills")}
-              type="text"
-              id="skillsRequired"
-              required
-              placeholder={t("skills_required")}
-              {...register("skillsRequired")}
-            />
-            <InputField
-              label={t("temporarily in text")}
-              type="text"
-              id="jobDescription"
-              required
-              placeholder={t("job_description")}
-              {...register("jobDescription")}
-            />
+            <div>Upload JD</div>
+            <FileUploader />
           </div>
           <div className="justify-end">
             <DialogFooter showDivider>

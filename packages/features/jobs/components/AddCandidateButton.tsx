@@ -15,6 +15,8 @@ import {
   showToast,
 } from "@calcom/ui";
 
+import { FileUploader } from "./FileUploader";
+
 export function AddCandidateButton({ name = "add-candidate" }: { name?: string }) {
   const { t } = useLocale();
 
@@ -75,7 +77,8 @@ export function AddCandidateButton({ name = "add-candidate" }: { name?: string }
               placeholder={t("email")}
               {...register("email")}
             />
-            <InputField label={t("Candidate CV")} type="string" id="cv" required {...register("cv")} />
+            <p>Upload CV</p>
+            <FileUploader />
           </div>
           <div className="justify-end">
             <DialogFooter showDivider>
