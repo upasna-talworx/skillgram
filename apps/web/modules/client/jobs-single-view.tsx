@@ -1,5 +1,5 @@
 import { useAutoAnimate } from "@formkit/auto-animate/react";
-import { useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 
 import { JobRoundListItem } from "@calcom/features/jobs/components/JobRoundListItem";
 import { NewJobRoundButton } from "@calcom/features/jobs/components/NewJobRoundButton";
@@ -10,9 +10,8 @@ import { EmptyScreen } from "@calcom/ui";
 function JobRoundsList() {
   const { t } = useLocale();
   const [animationParentRef] = useAutoAnimate<HTMLUListElement>();
-  const router = useRouter();
-  console.log(router);
-  const { job } = router.query;
+  const path = usePathname();
+  const job = path.split("/")[2];
   const jobId = parseInt(job, 10);
   // const jobRounds = trpc.viewer.client.getJobRound.useQuery({ jobId: jobId })
   const jobRounds = [
@@ -49,8 +48,8 @@ function JobRoundsList() {
 
 const JobSingleView = () => {
   const { t } = useLocale();
-  const router = useRouter();
-  const { job } = router.query;
+  const path = usePathname();
+  const job = path.split("/")[2];
   const jobId = parseInt(job, 10);
   // const { data } = trpc.viewer.client.getJob.useQuery({ jobId: jobId })
   const data = { jobTitle: "JAVA Developer" };

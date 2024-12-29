@@ -33,22 +33,23 @@ export function JobListItem({ job }: { job: JobType }) {
               </div>
             </Link>
           </div>
-          <ButtonGroup combined>
+          <ButtonGroup>
             <>
               <Tooltip content={t("add_hiring_managers")}>
                 <AddHiringManagerButton jobId={job.jobId} />
               </Tooltip>
               <Tooltip content={t("list_candidates")}>
                 <Button
-                  color="minimal"
-                  variant="icon"
+                  color="secondary"
+                  variant="fav"
                   StartIcon="users"
                   onClick={() => {
                     router.push(`client/jobs/${job.jobId}/candidate-status`);
-                  }}
-                />
+                  }}>
+                  Candidates
+                </Button>
               </Tooltip>
-              <Tooltip content={t("delete")}>
+              {/* <Tooltip content={t("delete")}>
                 <Button
                   data-testid="delete-job"
                   color="destructive"
@@ -56,9 +57,8 @@ export function JobListItem({ job }: { job: JobType }) {
                   StartIcon="trash"
                   onClick={() => {
                     deleteFunction({ jobId: job.jobId });
-                  }}
-                />
-              </Tooltip>
+                  }}/>
+              </Tooltip> */}
             </>
           </ButtonGroup>
         </div>

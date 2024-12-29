@@ -1,5 +1,5 @@
 import { useAutoAnimate } from "@formkit/auto-animate/react";
-import { useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 
 import { AddCandidateButton } from "@calcom/features/jobs/components/AddCandidateButton";
 import { CandidateListItem } from "@calcom/features/jobs/components/CandidateListItem";
@@ -11,8 +11,8 @@ function CandidatesList() {
   const { t } = useLocale();
   const [animationParentRef] = useAutoAnimate<HTMLUListElement>();
   // get jobId from url or somewhere
-  const router = useRouter();
-  const { job } = router.query;
+  const path = usePathname();
+  const job = path.split("/")[2];
   const jobId = parseInt(job, 10);
   // const candidates = trpc.viewer.client.listCandidate.useQuery({ jobId: jobId })
   const candidates = [
@@ -50,8 +50,8 @@ function CandidatesList() {
 
 const CandidatesListingPage = () => {
   const { t } = useLocale();
-  const router = useRouter();
-  const { job } = router.query;
+  const path = usePathname();
+  const job = path.split("/")[2];
   const jobId = parseInt(job, 10);
   // const { data } = trpc.viewer.client.getJob.useQuery({ jobId: jobId })
   const data = { jobTitle: "JAVA Developer" };

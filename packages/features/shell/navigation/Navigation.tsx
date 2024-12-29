@@ -42,9 +42,9 @@ const navigation: NavigationItemType[] = [
     icon: "folder",
   },
   {
-    name: "connect_panellists_to_event",
+    name: "connect_panellists",
     href: "/connect",
-    icon: "link",
+    icon: "eye",
   },
   {
     name: MORE_SEPARATOR_NAME,
