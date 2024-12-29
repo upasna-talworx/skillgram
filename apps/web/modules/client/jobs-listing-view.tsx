@@ -6,13 +6,15 @@ import { NewJobButton } from "@calcom/features/jobs/components/NewJobButton";
 import Shell from "@calcom/features/shell/Shell";
 import { useDebounce } from "@calcom/lib/hooks/useDebounce";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
+import { trpc } from "@calcom/trpc/react";
 import { EmptyScreen, TextField, Icon } from "@calcom/ui";
 
 function JobsList() {
   const { t } = useLocale();
   const [animationParentRef] = useAutoAnimate<HTMLUListElement>();
-  // const jobs = trpc.viewer.client.listJobs.useQuery();
-  const jobs = [{ jobId: 1 }, { jobId: 2 }];
+  const { data } = trpc.viewer.client.listJobs.useQuery();
+  const jobs = data?.jobs || [];
+  // const jobs = [{ jobId: 1 }, { jobId: 2 }];
 
   // const deleteMutation = trpc.viewer.availability.schedule.delete.useMutation({
   //     onMutate: async ({ scheduleId }) => {
