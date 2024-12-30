@@ -25,7 +25,6 @@ export const getJobRoundHandler = async ({ ctx, input }: getJobRoundInput) => {
         roundId: true,
         roundType: true,
         roundNumber: true,
-        maxScore: true,
       },
     });
     return { jobRounds };

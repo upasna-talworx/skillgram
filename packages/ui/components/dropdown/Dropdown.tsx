@@ -139,9 +139,9 @@ type ButtonOrLinkProps = ComponentProps<"button"> & ComponentProps<"a">;
 
 export function ButtonOrLink({ href, ...props }: ButtonOrLinkProps) {
   const isLink = typeof href !== "undefined";
-  const ButtonOrLink = isLink ? "a" : "button";
+  const TempButtonOrLink = isLink ? "a" : "button";
 
-  const content = <ButtonOrLink {...props} />;
+  const content = <TempButtonOrLink {...props} />;
 
   if (isLink) {
     return (

@@ -9,22 +9,12 @@ import { useState, useMemo } from "react";
 import { useOrgBranding } from "@calcom/features/ee/organizations/context/provider";
 import { getOrgFullOrigin } from "@calcom/features/ee/organizations/lib/orgDomains";
 import { classNames } from "@calcom/lib";
-import { IS_CALCOM, IS_VISUAL_REGRESSION_TESTING, ENABLE_PROFILE_SWITCHER } from "@calcom/lib/constants";
+import { IS_CALCOM, ENABLE_PROFILE_SWITCHER } from "@calcom/lib/constants";
 import { getPlaceholderAvatar } from "@calcom/lib/defaultAvatarImage";
 import { useCopy } from "@calcom/lib/hooks/useCopy";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { useNotifications, ButtonState } from "@calcom/lib/hooks/useNotifications";
-import {
-  Avatar,
-  Button,
-  ButtonOrLink,
-  Credits,
-  Icon,
-  SkeletonText,
-  Tooltip,
-  Logo,
-  showToast,
-} from "@calcom/ui";
+import { Avatar, Button, Icon, SkeletonText, Logo, showToast } from "@calcom/ui";
 
 import { KBarTrigger } from "../kbar/Kbar";
 import type { LayoutProps } from "./Shell";
@@ -200,49 +190,6 @@ export function SideBar({ bannersHeight, user }: SideBarProps) {
           </Link>
           <Navigation isPlatformNavigation={isPlatformPages} />
         </div>
-
-        {!isPlatformPages && (
-          <div>
-            {/* <Tips /> */}
-            {bottomNavItems.map((item, index) => (
-              <Tooltip side="right" content={t(item.name)} className="lg:hidden" key={item.name}>
-                <ButtonOrLink
-                  id={item.name}
-                  href={item.href || undefined}
-                  aria-label={t(item.name)}
-                  target={item.target}
-                  className={classNames(
-                    "text-left",
-                    "[&[aria-current='page']]:bg-emphasis text-default justify-right group flex items-center rounded-md px-2 py-1.5 text-sm font-medium transition",
-                    "[&[aria-current='page']]:text-emphasis mt-0.5 w-full text-sm",
-                    isLocaleReady ? "hover:bg-emphasis hover:text-emphasis" : "",
-                    index === 0 && "mt-3"
-                  )}
-                  onClick={item.onClick}>
-                  {!!item.icon && (
-                    <Icon
-                      name={item.isLoading ? "rotate-cw" : item.icon}
-                      className={classNames(
-                        "h-4 w-4 flex-shrink-0 [&[aria-current='page']]:text-inherit",
-                        "me-3 md:mx-auto lg:ltr:mr-2 lg:rtl:ml-2",
-                        item.isLoading && "animate-spin"
-                      )}
-                      aria-hidden="true"
-                    />
-                  )}
-                  {isLocaleReady ? (
-                    <span className="hidden w-full justify-between lg:flex">
-                      <div className="flex">{t(item.name)}</div>
-                    </span>
-                  ) : (
-                    <SkeletonText className="h-[20px] w-full" />
-                  )}
-                </ButtonOrLink>
-              </Tooltip>
-            ))}
-            {!IS_VISUAL_REGRESSION_TESTING && <Credits />}
-          </div>
-        )}
       </aside>
     </div>
   );

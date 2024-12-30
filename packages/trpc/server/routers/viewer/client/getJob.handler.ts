@@ -15,6 +15,7 @@ type getJobInput = {
 
 export const getJobHandler = async ({ ctx, input }: getJobInput) => {
   const jobId = input.jobId;
+  console.log(jobId);
   try {
     const job = await prisma.job.findUnique({
       where: {

@@ -19,7 +19,6 @@ export const addCandidateHandler = async ({ ctx, input }: addCandidateSchema) =>
       data: {
         jobId: input.jobId,
         candidateEmail: input.email,
-        // cv?
       },
     });
     return { application };

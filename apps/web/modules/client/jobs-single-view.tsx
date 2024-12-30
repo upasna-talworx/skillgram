@@ -5,23 +5,20 @@ import { JobRoundListItem } from "@calcom/features/jobs/components/JobRoundListI
 import { NewJobRoundButton } from "@calcom/features/jobs/components/NewJobRoundButton";
 import Shell from "@calcom/features/shell/Shell";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
+import { trpc } from "@calcom/trpc/react";
 import { EmptyScreen } from "@calcom/ui";
 
 function JobRoundsList() {
   const { t } = useLocale();
   const [animationParentRef] = useAutoAnimate<HTMLUListElement>();
   const path = usePathname();
-  const job = path.split("/")[2];
-  const jobId = parseInt(job, 10);
-  // const jobRounds = trpc.viewer.client.getJobRound.useQuery({ jobId: jobId })
-  const jobRounds = [
-    { jobId: jobId, roundId: 1, roundType: "QUIZ", roundNumber: 1, maxScore: 10 },
-    { jobId: jobId, roundId: 2, roundType: "INTERVIEW", roundNumber: 2, maxScore: 20 },
-  ];
+  const jobId: number = path ? +path.split("/")[3] : 0;
+  const { data } = trpc.viewer.client.getJobRound.useQuery({ jobId: jobId });
+  const jobRounds = data?.jobRounds;
 
   return (
     <>
-      {jobRounds.length === 0 ? (
+      {jobRounds && jobRounds.length === 0 ? (
         <div className="flex justify-center">
           <EmptyScreen
             Icon="clock"
@@ -35,9 +32,11 @@ function JobRoundsList() {
         <>
           <div className="border-subtle bg-default overflow-hidden rounded-md border">
             <ul className="divide-subtle divide-y" data-testid="jobs" ref={animationParentRef}>
-              {jobRounds.map((jobRound) => (
-                <JobRoundListItem key={jobRound.roundId} jobRound={jobRound} />
-              ))}
+              {jobRounds ? (
+                jobRounds.map((jobRound) => <JobRoundListItem key={jobRound.roundId} jobRound={jobRound} />)
+              ) : (
+                <></>
+              )}
             </ul>
           </div>
         </>

@@ -5,6 +5,7 @@ import { AddCandidateButton } from "@calcom/features/jobs/components/AddCandidat
 import { CandidateListItem } from "@calcom/features/jobs/components/CandidateListItem";
 import Shell from "@calcom/features/shell/Shell";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
+import { trpc } from "@calcom/trpc/react";
 import { EmptyScreen } from "@calcom/ui";
 
 function CandidatesList() {
@@ -12,18 +13,14 @@ function CandidatesList() {
   const [animationParentRef] = useAutoAnimate<HTMLUListElement>();
   // get jobId from url or somewhere
   const path = usePathname();
-  const job = path.split("/")[2];
-  const jobId = parseInt(job, 10);
-  // const candidates = trpc.viewer.client.listCandidate.useQuery({ jobId: jobId })
-  const candidates = [
-    { candidateId: 1, candidateEmail: "abc@mail.com", status: "EMAIL_SENT", verdict: "NOT_APPLICABLE" },
-    { candidateId: 2, candidateEmail: "xyz@mail.com", status: "COMPLETED", verdict: "HIRE" },
-    { candidateId: 3, candidateEmail: "pqr@mail.com", status: "IN_PROCESS", verdict: "NOT_APPLICABLE" },
-  ];
+  const jobId = path ? +path.split("/")[3] : 0;
+  const { data } = trpc.viewer.client.listCandidate.useQuery({ jobId: jobId });
+  const candidates = data?.candidates;
+  console.log(candidates);
 
   return (
     <>
-      {candidates.length === 0 ? (
+      {candidates && candidates.length === 0 ? (
         <div className="flex justify-center">
           <EmptyScreen
             Icon="clock"
@@ -37,9 +34,13 @@ function CandidatesList() {
         <>
           <div className="border-subtle bg-default overflow-hidden rounded-md border">
             <ul className="divide-subtle divide-y" data-testid="jobs" ref={animationParentRef}>
-              {candidates.map((candidate) => (
-                <CandidateListItem key={candidate.candidateId} candidate={candidate} />
-              ))}
+              {candidates ? (
+                candidates.map((candidate) => (
+                  <CandidateListItem key={candidate.candidateId} candidate={candidate} />
+                ))
+              ) : (
+                <></>
+              )}
             </ul>
           </div>
         </>
@@ -51,10 +52,8 @@ function CandidatesList() {
 const CandidatesListingPage = () => {
   const { t } = useLocale();
   const path = usePathname();
-  const job = path.split("/")[2];
-  const jobId = parseInt(job, 10);
-  // const { data } = trpc.viewer.client.getJob.useQuery({ jobId: jobId })
-  const data = { jobTitle: "JAVA Developer" };
+  const jobId: number = path ? +path.split("/")[3] : 0;
+  const { data } = trpc.viewer.client.getJob.useQuery({ jobId: jobId });
 
   return (
     <Shell
@@ -62,7 +61,7 @@ const CandidatesListingPage = () => {
       title="Candidate Status"
       description="Monitor the status of Applied Candidates"
       backPath="/client"
-      heading={data.jobTitle}
+      heading={data ? data.job?.jobTitle : "Loading..."}
       hideHeadingOnMobile
       subtitle={t("Monitor the status of Applied Candidates")}
       CTA={<AddCandidateButton />}>

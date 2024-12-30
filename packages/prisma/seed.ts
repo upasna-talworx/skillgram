@@ -17,7 +17,7 @@ import type { Ensure } from "@calcom/types/utils";
 import prisma from ".";
 import mainAppStore from "./seed-app-store";
 import mainHugeEventTypesSeed from "./seed-huge-event-types";
-import { createSkill, createUserAndEventType } from "./seed-utils";
+import { createCompany, createSkill, createUserAndEventType } from "./seed-utils";
 import type { teamMetadataSchema } from "./zod-utils";
 
 type PlatformUser = {
@@ -1242,6 +1242,10 @@ async function main() {
   const skills = ["Java", "Python", "DSA", ".Net", "ABAP", "Communication"];
   await skills.map(async (name, index) => {
     await createSkill(index, name);
+  });
+  const companies = ["Deloitte", "FSI"];
+  await companies.map(async (name, index) => {
+    await createCompany(index, name);
   });
 }
 

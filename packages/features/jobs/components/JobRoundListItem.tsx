@@ -14,7 +14,6 @@ type JobRoundType = {
   roundId: number;
   roundType: string;
   roundNumber: number;
-  maxScore: number;
 };
 
 export function JobRoundListItem({ jobRound }: { jobRound: JobRoundType }) {
@@ -41,7 +40,6 @@ export function JobRoundListItem({ jobRound }: { jobRound: JobRoundType }) {
                 Job Id: {jobRound.jobId} , Round: {jobRound.roundNumber}
               </Badge>
               <br />
-              <p className="truncate text-xs">MAX SCORE: {jobRound.maxScore}</p>
             </div>
           </div>
           <Dropdown>

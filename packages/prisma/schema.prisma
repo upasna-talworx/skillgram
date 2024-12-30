@@ -353,7 +353,6 @@ model User {
   Panellist                  Panellist?
   Client                     Client?
   Admin                      Admin?
-  candidateEmail             JobApplication[] //a user(candidate) can have multiple job applications
 
   @@unique([email])
   @@unique([email, username])
@@ -375,8 +374,7 @@ model Candidate {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  User            User             @relation(fields: [userId], references: [id])
-  JobApplications JobApplication[] //one candidate can have multiple job applications
+  User User @relation(fields: [userId], references: [id])
 }
 
 model Panellist {
@@ -399,15 +397,15 @@ model Client {
   updatedAt DateTime @updatedAt
 
   User      User        @relation(fields: [userId], references: [id])
-  Company   Company     @relation(fields: [companyId], references: [id])
+  Company   Company?    @relation(fields: [companyId], references: [id])
   jobClient JobClient[]
 }
 
 model Company {
-  id          Int      @id @default(autoincrement())
-  companyName String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id        Int      @id @default(autoincrement())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   Clients Client[]
 }
@@ -473,22 +471,13 @@ model JobRoundSkill {
 }
 
 model SkillRating {
-  id      Int    @id @default(autoincrement())
-  skillId Int
-  rating  Rating @default(UNASSIGNED)
-
-  skill                          Skill                            @relation(fields: [skillId], references: [id])
-  JobApplicationRoundSkillRating JobApplicationRoundSkillRating[]
-}
-
-model JobApplicationRoundSkillRating {
-  skillRatingId         Int
+  id                    Int    @id @default(autoincrement())
+  skillId               Int
+  rating                Rating @default(UNASSIGNED)
   jobApplicationRoundId Int
 
-  skillRating         SkillRating         @relation(fields: [skillRatingId], references: [id])
+  skill               Skill               @relation(fields: [skillId], references: [id])
   jobApplicationRound JobApplicationRound @relation(fields: [jobApplicationRoundId], references: [id])
-
-  @@id([skillRatingId, jobApplicationRoundId])
 }
 
 enum RoundType {
@@ -544,8 +533,6 @@ model JobApplication {
   updatedAt      DateTime @updatedAt
 
   Job                  Job                   @relation(fields: [jobId], references: [jobId])
-  User                 User                  @relation(fields: [candidateEmail], references: [email])
-  Candidate            Candidate?            @relation(fields: [candidateId], references: [userId])
   jobApplicationRounds JobApplicationRound[]
 }
 
@@ -570,7 +557,7 @@ model JobApplicationRound {
   job            Job            @relation(fields: [jobId], references: [jobId])
   team           Team?          @relation(fields: [teamId], references: [id])
 
-  JobApplicationRoundSkillRating JobApplicationRoundSkillRating[]
+  SkillRating SkillRating[]
 }
 
 model NotificationsSubscriptions {

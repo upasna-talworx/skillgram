@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 
 import HelpMenuItem from "@calcom/features/ee/support/components/HelpMenuItem";
 import { classNames } from "@calcom/lib";
-import { JOIN_COMMUNITY, ROADMAP, DESKTOP_APP_LINK } from "@calcom/lib/constants";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import useMeQuery from "@calcom/trpc/react/hooks/useMeQuery";
 import {
@@ -139,67 +138,9 @@ export function UserDropdown({ small }: UserDropdownProps) {
                         {t("my_settings")}
                       </DropdownItem>
                     </DropdownMenuItem>
-                    <DropdownMenuItem>
-                      <DropdownItem
-                        type="button"
-                        CustomStartIcon={
-                          <Icon name="moon" className="text-default h-4 w-4" aria-hidden="true" />
-                        }
-                        href="/settings/my-account/out-of-office">
-                        {t("out_of_office")}
-                      </DropdownItem>
-                    </DropdownMenuItem>
                     <DropdownMenuSeparator />
                   </>
                 )}
-
-                <DropdownMenuItem>
-                  <DropdownItem
-                    StartIcon="messages-square"
-                    target="_blank"
-                    rel="noreferrer"
-                    href={JOIN_COMMUNITY}>
-                    {t("join_our_community")}
-                  </DropdownItem>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <DropdownItem StartIcon="map" target="_blank" href={ROADMAP}>
-                    {t("visit_roadmap")}
-                  </DropdownItem>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <DropdownItem
-                    type="button"
-                    StartIcon="circle-help"
-                    aria-hidden="true"
-                    onClick={() => setHelpOpen(true)}>
-                    {t("help")}
-                  </DropdownItem>
-                </DropdownMenuItem>
-                {!isPlatformPages && (
-                  <DropdownMenuItem className="todesktop:hidden hidden lg:flex">
-                    <DropdownItem
-                      StartIcon="download"
-                      target="_blank"
-                      rel="noreferrer"
-                      href={DESKTOP_APP_LINK}>
-                      {t("download_desktop_app")}
-                    </DropdownItem>
-                  </DropdownMenuItem>
-                )}
-
-                {!isPlatformPages && isPlatformUser && (
-                  <DropdownMenuItem className="todesktop:hidden hidden lg:flex">
-                    <DropdownItem
-                      StartIcon="blocks"
-                      target="_blank"
-                      rel="noreferrer"
-                      href="/settings/platform">
-                      Platform
-                    </DropdownItem>
-                  </DropdownMenuItem>
-                )}
-                <DropdownMenuSeparator />
 
                 <DropdownMenuItem>
                   <DropdownItem

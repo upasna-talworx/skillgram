@@ -1,3 +1,4 @@
+import { usePathname } from "next/navigation";
 import { useForm } from "react-hook-form";
 
 import { useLocale } from "@calcom/lib/hooks/useLocale";
@@ -22,7 +23,6 @@ export function AddCandidateButton({ name = "add-candidate" }: { name?: string }
 
   const form = useForm<{
     email: string;
-    cv: string;
   }>();
   const { register } = form;
   const utils = trpc.useUtils();
@@ -54,6 +54,8 @@ export function AddCandidateButton({ name = "add-candidate" }: { name?: string }
     },
   });
 
+  const path = usePathname();
+  const jobId = path ? +path.split("/")[3] : 0;
   return (
     <Dialog name={name} clearQueryParamsOnClose={["copy-schedule-id"]}>
       <DialogTrigger asChild>
@@ -65,8 +67,7 @@ export function AddCandidateButton({ name = "add-candidate" }: { name?: string }
         <Form
           form={form}
           handleSubmit={(input) => {
-            // createMutation.mutate(input);
-            console.log(input);
+            createMutation.mutate({ ...input, jobId: jobId });
           }}>
           <div className="mt-3 space-y-6 pb-11">
             <InputField

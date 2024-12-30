@@ -280,3 +280,19 @@ export async function createSkill(id: number, name: string) {
   });
   console.log(`${skill.name} created.`);
 }
+
+export async function createCompany(id: number, name: string) {
+  const company = await prisma.company.upsert({
+    where: {
+      id: id,
+    },
+    update: {
+      name: name,
+    },
+    create: {
+      id: id,
+      name: name,
+    },
+  });
+  console.log(`Company ${company.name} created.`);
+}

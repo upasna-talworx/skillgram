@@ -2,7 +2,7 @@ import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { Badge } from "@calcom/ui";
 
 type CandidateType = {
-  candidateId: number;
+  candidateId: number | null;
   candidateEmail: string;
   status: string;
   verdict: string;

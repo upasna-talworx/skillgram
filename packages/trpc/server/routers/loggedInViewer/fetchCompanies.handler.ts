@@ -6,14 +6,14 @@ export async function fetchCompaniesHandler() {
     const companies = await prisma.company.findMany({
       select: {
         id: true, // Fetch the `id` field
-        companyName: true, // Fetch the `companyName` field
+        name: true, // Fetch the `companyName` field
       },
     });
 
     // Transform the data into the desired format
     return companies.map((company) => ({
       id: company.id,
-      label: company.companyName,
+      label: company.name,
     }));
   } catch (error) {
     // Handle any potential errors (e.g., log them or throw a custom error)
