@@ -16,6 +16,7 @@ const config: Config = {
     extend: {
       colors: {
         "gray-1": '#333333',
+        "gray-6": '#f3f3f3',  // This is the correct definition
         white: "#fff",
         whitesmoke: "#f6f6f6",
         darkslategray: "#3b3b3b",
