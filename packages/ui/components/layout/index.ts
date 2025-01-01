@@ -1,1 +1,0 @@
-export { ShellSubHeading } from "./ShellSubHeading";
