@@ -15,7 +15,7 @@ const config: Config = {
     },
     extend: {
       colors: {
-       
+        "gray-1": '#333333',
         white: "#fff",
         whitesmoke: "#f6f6f6",
         darkslategray: "#3b3b3b",

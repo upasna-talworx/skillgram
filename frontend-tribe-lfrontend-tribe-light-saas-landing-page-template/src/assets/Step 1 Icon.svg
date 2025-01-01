@@ -1,0 +1,15 @@
+<svg width="30" height="29" viewBox="0 0 30 29" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Step 1 Icon" clip-path="url(#clip0_4124_4594)">
+<path id="1 BG Circle Vector" d="M29.5 14.5C29.5 6.49188 23.0081 0 15 0C6.99188 0 0.5 6.49188 0.5 14.5C0.5 22.5081 6.99188 29 15 29C23.0081 29 29.5 22.5081 29.5 14.5Z" fill="url(#paint0_linear_4124_4594)"/>
+<path id="1 Vector" fill-rule="evenodd" clip-rule="evenodd" d="M11.5469 11.2552V7.37476H17.4463V21.0251H13.2408V11.2552H11.5469ZM13.8208 10.6752V20.4451H16.8663V7.95476H12.1269V10.6752H13.8208Z" fill="white"/>
+</g>
+<defs>
+<linearGradient id="paint0_linear_4124_4594" x1="-5.60148" y1="6.78226" x2="37.2981" y2="8.45889" gradientUnits="userSpaceOnUse">
+<stop stop-color="#828282"/>
+<stop offset="1"/>
+</linearGradient>
+<clipPath id="clip0_4124_4594">
+<rect width="29" height="29" fill="white" transform="translate(0.5)"/>
+</clipPath>
+</defs>
+</svg>
