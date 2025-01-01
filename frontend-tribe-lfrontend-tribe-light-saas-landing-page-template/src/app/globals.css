@@ -1,0 +1,237 @@
+@import url('https://fonts.googleapis.com/css2?family=Garet:wght@400;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Garet:wght@400;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  	@apply leading-[normal] m-0;
+    background-color: rgb(247, 36, 36);
+    font-family: 'DM Sans', sans-serif; /* Default font for body */
+}
+
+*, ::before, ::after { 
+    border-width: 0; 
+}
+
+/* Optional: Define Garet font for use in classes */
+.font-garet-regular {
+    font-family: 'Garet', sans-serif;
+    font-weight: 400;
+}
+
+.font-garet-heavy {
+    font-family: 'Garet', sans-serif;
+    font-weight: 800;
+}
+
+/* Header */
+.header {
+    @apply w-full relative h-[155px] text-left text-primary-dark font-dm-sans;
+  }
+  
+  /* Background and Navigation */
+  .header-bg {
+    @apply absolute top-0 left-0 bg-white w-full flex flex-col items-start justify-start py-0 px-8 box-border;
+  }
+  
+  /* Navbar */
+  .navbar {
+    @apply w-full bg-white h-[66px] flex items-center justify-between max-w-[1600px] mx-auto;
+  }
+  
+  /* Logo */
+  .logo {
+    @apply border-[#3B3B3B] border-[1px] border-solid flex items-center;
+    width: 150px;
+    height: 38.71px;
+    padding-left: 2px;
+  }
+  
+  .logo-skill {
+    @apply bg-black flex items-center justify-center;
+    width: 73.02px;
+    height: 34.31px;
+    margin-top: 2px;
+    margin-bottom: 2px;
+  }
+  
+  .logo-skill-text {
+    @apply text-white;
+    font-family: "Garet", sans-serif;
+    font-weight: 400; /* Garet Regular */
+  }
+  
+  .logo-gram {
+    @apply text-gray-700 flex-1 flex items-center justify-center;
+    height: 100%;
+    font-family: "Garet", sans-serif;
+    font-weight: 800; /* Garet Heavy */
+  }
+  
+  /* Navigation Links */
+  .nav-links {
+    @apply flex items-center gap-4;
+  }
+  
+  .nav-button {
+    @apply text-lg py-2 px-4 bg-transparent hover:text-gray-700 focus:outline-none;
+  }
+  
+  /* Book Demo Button */
+  .book-demo {
+    @apply bg-whitesmoke rounded-45xl px-6 py-3 flex items-center border-[#3B3B3B] border-[1px] border-solid overflow-hidden gap-1;
+  }
+  
+  .book-demo-text {
+    @apply font-medium text-primary-dark;
+  }
+  
+  /* Decorative Circle */
+  .decorative-circle {
+    @apply absolute top-[-51px] left-[265px];
+  }
+  
+
+
+/*Services Section */
+
+.servicesection{ 
+    @apply relative w-full flex flex-col items-center justify-start py-0 px-px box-border gap-[81px] text-center text-[14.01px] text-primary-dark font-dm-sans mb-16 mt-16
+}
+
+.uppersection {
+    @apply w-[1067.4px] h-[291.1px] flex flex-col items-center justify-center gap-4
+}
+
+.servicebanner {
+    @apply rounded-[32.01px] bg-[#e5e5e5] border-black border-[1px] border-solid overflow-hidden flex flex-row items-center justify-center py-2 px-3 gap-1 text-left
+}
+
+.servicelogo {
+    @apply w-[17px] h-[17px] relative
+}
+.servicelabeltext {
+    @apply relative leading-[16.81px] font-medium
+}
+
+.serviceheading {
+    @apply self-stretch flex flex-col items-center justify-start py-0 px-[91.9px] text-[47.83px]
+}
+
+.serviceheadingtextstyle {
+    @apply relative leading-[48.02px] inline-block max-w-[728.26px]
+}
+
+.servicessectiondescription {
+    @apply self-stretch relative text-[18.01px] leading-[30.01px] text-[#333333] flex items-center justify-center h-[92px] shrink-0
+}
+
+
+  .cardssection {
+    @apply w-[1068px] h-[305.2px] overflow-hidden shrink-0 flex flex-row items-start justify-start gap-[27.1px] text-black;
+  }
+  
+  .card {
+    @apply self-stretch flex-1 rounded-[20.33px] bg-whitesmoke border-[#BDBDBD] border-[0.8px] border-solid flex flex-col items-center justify-start pt-[61px] px-[33.9px] pb-[33.9px];
+  }
+  
+  .cardheading {
+    @apply relative text-[25px] leading-[32px] text-primary-dark inline-block max-w-[252.95px] mb-4; 
+  }
+  
+  .carddescription {
+    @apply relative text-[13.55px] leading-[18.97px] text-[#333333] inline-block max-w-[254.49px];
+  }
+  
+
+/* Footer Section */
+.footer {
+  @apply w-full bg-[#D9D9D9] py-0 px-[20px] box-border text-left text-[15.95px] text-primary-dark font-dm-sans;
+}
+
+.footer-container {
+  @apply w-full max-w-[1440px] mx-auto flex flex-col items-center justify-start py-[38px] px-[20px] gap-[11px];
+}
+
+.footer-content {
+  @apply w-full flex items-start justify-between gap-x-[30px] lg:gap-x-[50px];
+  flex-wrap: nowrap; /* Prevent wrapping to next line */
+}
+
+.footer-logo-section {
+  @apply flex flex-col items-start justify-start gap-[25.5px] text-[14.04px] text-black font-garet;
+}
+
+.footer-logo-bg {
+  @apply w-[121.8px] bg-gray-200 border-black border-[1.1px] border-solid box-border h-[33px] flex flex-row items-center justify-start p-[1.6px] relative gap-[7.2px];
+}
+
+.footer-logo-main {
+  @apply w-[58.2px] relative bg-black h-[27.4px] z-[0];
+}
+
+.footer-logo-text {
+  @apply w-[50.9px] relative font-extrabold inline-block h-[19.3px] shrink-0 z-[1];
+}
+
+.footer-logo-subtext {
+  @apply w-[38.9px] absolute !m-[0] top-[5.26px] left-[11.23px] text-white inline-block z-[2];
+}
+
+.footer-description {
+  @apply text-[15.95px] text-[#4F4F4F] font-dm-sans leading-[160%] opacity-[0.9] max-w-[395.7px];
+}
+
+.footer-section {
+  @apply flex flex-col items-start justify-start gap-[25.5px] text-[#1D1C20];
+}
+
+.footer-section-title {
+  @apply leading-[100%];
+}
+
+.footer-section-items {
+  @apply flex flex-col items-start justify-start gap-[19.1px] text-[12.76px] text-[#4F4F4F];
+}
+
+.footer-section-item {
+  @apply leading-[100%];
+}
+
+.footer-newsletter {
+  @apply w-full lg:max-w-[388.5px] flex flex-col items-start justify-start gap-[25.5px] text-[#1D1C20];
+}
+
+.footer-newsletter-title {
+  @apply leading-[100%];
+}
+
+.footer-newsletter-input-group {
+  @apply w-full flex items-center;
+}
+
+.footer-newsletter-input {
+  @apply flex-grow rounded-l-md py-[13.6px] pl-4 focus:outline-none placeholder:text-[#1D1C20] bg-white;
+}
+
+.footer-newsletter-button {
+  @apply bg-[#2F7ADC] text-white rounded-r-md py-[13.6px] px-6 w-[139.9px] text-center;
+}
+
+.footer-divider {
+  @apply w-full border-[#BDBDBD] border-t-[0.8px] border-solid box-border my-6;
+}
+
+.footer-copyright {
+  @apply text-[11.17px] tracking-[0.4px] leading-[15.95px] text-[#4F4F4F] text-center;
+}
+
+@media (max-width: 768px) {
+  .footer-content {
+    flex-wrap: wrap;
+    gap-y: 20px; /* Add vertical spacing for wrapped items */
+  }
+}
