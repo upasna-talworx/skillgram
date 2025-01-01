@@ -40,11 +40,12 @@ const config: Config = {
           lg: "80px",
         },
       },
-    },
-    fontSize: {
-      lg: "18px",
-      "mid-6": "17.6px",
-      inherit: "inherit",
+      fontSize: {
+        lg: "18px",
+        "mid-6": "17.6px",
+        inherit: "inherit",
+        sm: "0.875rem", // This defines `text-sm` size
+      },
     },
   },
   corePlugins: {

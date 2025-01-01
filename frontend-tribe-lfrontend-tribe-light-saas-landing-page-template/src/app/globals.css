@@ -94,6 +94,102 @@ body {
     @apply absolute top-[-51px] left-[265px];
   }
   
+/* global.css */
+
+/* Container */
+.guide-container {
+  @apply relative w-full flex flex-col items-center justify-start text-center text-[14px] text-primary-dark font-dm-sans py-0 px-px box-border gap-[81px] mb-16 mt-16;
+}
+
+/* Guide section */
+.guide-section {
+  @apply flex flex-col items-center justify-start py-0 px-px gap-[55px];
+}
+
+/* Guide Banner */
+.guide-banner {
+  @apply rounded-[32px] border-black border-[1px] border-solid overflow-hidden flex flex-row items-center justify-center py-2 px-3 gap-1 text-left;
+}
+
+.guide-logo {
+  @apply w-3.5 relative h-3.5 overflow-hidden shrink-0;
+}
+
+.guide-title {
+  @apply relative leading-[16.8px] font-medium;
+}
+
+/* Guide Heading */
+.guide-heading {
+  @apply self-stretch flex flex-col items-center justify-start py-0 px-[91.9px] text-[47.81px];
+}
+
+.guide-heading b {
+  @apply relative leading-[48px] inline-block max-w-[728px];
+}
+
+/* Guide Description */
+.guide-description {
+  @apply self-stretch relative text-[18px] leading-[30px] text-gray-1 flex items-center h-[92px] shrink-0;
+}
+
+.guide-description p {
+  @apply m-0;
+}
+
+/* Cards Section */
+.cards-section {
+  @apply w-[1068px] h-[457px] overflow-hidden flex flex-row items-stretch justify-between gap-6;
+}
+
+.card {
+  @apply flex-1 rounded-2xl bg-whitesmoke border border-[#bdbdbd] p-6 flex flex-col items-center justify-between self-stretch border-solid;
+}
+
+.card-header {
+  @apply text-center;
+}
+
+.card-icon {
+  @apply w-8 h-8 mb-4;
+}
+
+.card-title {
+  @apply text-[27.1px] font-dm-sans mb-2 text-black w-[253px];
+}
+
+.card-description {
+  @apply text-[13.11px] font-dm-sans text-[#333333] mb-4 w-[253px] mx-auto;
+}
+
+.bullet-points {
+  @apply text-[13.11px] font-dm-sans text-[#333333] flex flex-col space-y-2 w-[253px] mx-auto pl-4 mb-2;
+}
+
+.bullet-point {
+  @apply flex items-center;
+}
+
+.tick-icon {
+  @apply w-4 h-4 mr-2;
+}
+
+/* Button Styles */
+.card-button {
+  @apply w-[253.24px] h-[50.88px] rounded-[50px] font-medium;
+}
+
+.button-blue {
+  @apply bg-[#2F7ADC] text-white;
+}
+
+.button-white {
+  @apply bg-white text-[#3b3b3b] border border-[#3b3b3b];
+}
+
+.button-black {
+  @apply bg-[#1D1C20] text-white;
+}
 
 
 /*Services Section */
