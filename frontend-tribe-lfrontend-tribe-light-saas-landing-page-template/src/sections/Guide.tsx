@@ -1,26 +1,48 @@
-import Image from "next/image"; // Import the Image component if using Next.js
+import Image from "next/image";
 
 export const Guide = () => {
   return (
-        <div className="relative w-full flex flex-col items-start justify-start text-center text-[14px] text-primary-dark font-dm-sans">
-      			<div className="flex flex-col items-center justify-start py-0 px-px gap-[55px]">
-        				<div className="w-[1067px] flex flex-col items-center justify-center gap-4">
-          					<div className="rounded-[32px] bg-gray-6 border-black border-[1px] border-solid overflow-hidden flex flex-row items-center justify-center py-2 px-3 gap-1 text-left">
-            						<Image className="w-3.5 relative h-3.5 overflow-hidden shrink-0" width={14} height={14} alt="" src="Guide Logo.svg" />
-            						<div className="relative leading-[16.8px] font-medium">Guide</div>
-          					</div>
-          					<div className="self-stretch flex flex-col items-center justify-start py-0 px-[91.9px] text-[47.81px]">
-            						<b className="relative leading-[48px] inline-block max-w-[728px]">Hire With Few Easy Steps</b>
-          					</div>
-          					<div className="self-stretch relative text-[18px] leading-[30px] text-gray-1 flex items-center h-[92px] shrink-0">
-            						<span>
-              							<p className="m-0">Streamline Your Hiring Process in Three Simple Steps. Schedule interviews effortlessly with just a few clicks.</p>
-              							<p className="m-0"> Save time and boost efficiency in three easy steps!</p>
-            						</span>
-          					</div>
-        				</div>
+    <div className="relative w-full flex flex-col items-center justify-start text-center text-[14px] text-primary-dark font-dm-sans py-0 px-px box-border gap-[81px] mb-16 mt-16">
+      
+{/* Guidesectioncontent */}
+           <div className="flex flex-col items-center justify-start py-0 px-px gap-[55px]">
+ {/* Uppersection */}
+              <div className="w-[1067px] flex flex-col items-center justify-center gap-4">
+    {/* GuideBanner */}
+                 <div className="rounded-[32px] bg-gray-6 border-black border-[1px] border-solid overflow-hidden flex flex-row items-center justify-center py-2 px-3 gap-1 text-left">
+                   <Image
+                   className="w-3.5 relative h-3.5 overflow-hidden shrink-0"
+                   width={14}
+                   height={14}
+                   alt=""
+                   src="Guide Logo.svg"
+                    />
+                   <div className="relative leading-[16.8px] font-medium">Guide</div>
+                 </div>
+	{/* Guideheading */}
+                 <div className="self-stretch flex flex-col items-center justify-start py-0 px-[91.9px] text-[47.81px]">
+                    <b className="relative leading-[48px] inline-block max-w-[728px]">
+                     Hire With Few Easy Steps
+                    </b>
+                 </div>
+	{/* Guidedescription */}
+                 <div className="self-stretch relative text-[18px] leading-[30px] text-gray-1 flex items-center h-[92px] shrink-0">
+                  <span>
+                    <p className="m-0">
+                    Streamline Your Hiring Process in Three Simple Steps. Schedule
+                    interviews effortlessly with just a few clicks.
+                    </p>
+                    <p className="m-0">
+                     Save time and boost efficiency in three easy steps!
+                    </p>
+                  </span>
+                 </div>
+              </div>
+
+ {/* cards section */}
         				<div className="w-[1068px] h-[457.4px] overflow-hidden shrink-0 flex flex-row items-start justify-start gap-[27.1px] text-left text-[13.55px] text-black">
-          					<div className="flex-1 h-[457.4px] flex flex-col items-center justify-start">
+     {/* card1*/}
+							<div className="flex-1 h-[457.4px] flex flex-col items-center justify-start">
             						<div className="self-stretch flex-1 rounded-[20.33px] bg-whitesmoke border-silver border-[0.8px] border-solid flex flex-col items-center justify-start pt-[42.3px] px-[33.9px] pb-[33.9px]">
               							<div className="self-stretch h-[380.3px] flex flex-col items-center justify-start relative gap-[11.9px]">
                 								<Image className="w-[24.6px] relative h-[24.6px] overflow-hidden shrink-0 z-[0]" width={25} height={25} alt="" src="Step 1 Icon.svg" />
@@ -67,6 +89,7 @@ export const Guide = () => {
               							</div>
             						</div>
           					</div>
+     {/* card2 */}
           					<div className="flex-1 h-[457.4px] flex flex-col items-start justify-start text-primary-dark">
             						<div className="self-stretch flex-1 rounded-[20.33px] bg-whitesmoke border-silver border-[0.8px] border-solid flex flex-col items-center justify-start pt-[42.3px] px-[33.9px] pb-[33.9px]">
               							<div className="self-stretch h-[384.5px] flex flex-col items-center justify-start relative gap-[11.9px]">
@@ -112,6 +135,7 @@ export const Guide = () => {
               							</div>
             						</div>
           					</div>
+     {/* card3*/}
           					<div className="flex-1 h-[457.4px] flex flex-col items-center justify-start">
             						<div className="self-stretch flex-1 rounded-[20.33px] bg-whitesmoke border-silver border-[0.8px] border-solid flex flex-col items-center justify-start pt-[42.3px] px-[33.9px] pb-[33.9px]">
               							<div className="self-stretch h-[381.1px] flex flex-col items-center justify-start relative gap-[11.9px]">
@@ -158,8 +182,9 @@ export const Guide = () => {
             						</div>
           					</div>
         				</div>
-      			</div>
-    		</div>
+      		</div>
+       
+	</div>
   );
 };
 
