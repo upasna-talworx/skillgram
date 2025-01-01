@@ -52,8 +52,8 @@ export const Hero = () => {
             </div>
           </div>
 
-          {/* Right Image Section */}
-          <div className="h-full w-[36.09%]">
+          {/* Right Image Section with adjusted margin-right for spacing */}
+          <div className="h-full w-[36.09%] mr-[60px]"> {/* Reduced margin-right */}
             <Image
               src={RightImage}
               width={389}
