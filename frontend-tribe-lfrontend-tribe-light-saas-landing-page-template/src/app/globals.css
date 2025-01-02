@@ -42,34 +42,7 @@ body {
     @apply w-full bg-white h-[66px] flex items-center justify-between max-w-[1600px] mx-auto;
   }
   
-  /* Logo */
-  .logo {
-    @apply border-[#3B3B3B] border-[1px] border-solid flex items-center;
-    width: 150px;
-    height: 38.71px;
-    padding-left: 2px;
-  }
   
-  .logo-skill {
-    @apply bg-black flex items-center justify-center;
-    width: 73.02px;
-    height: 34.31px;
-    margin-top: 2px;
-    margin-bottom: 2px;
-  }
-  
-  .logo-skill-text {
-    @apply text-white;
-    font-family: "Garet", sans-serif;
-    font-weight: 400; /* Garet Regular */
-  }
-  
-  .logo-gram {
-    @apply text-gray-700 flex-1 flex items-center justify-center;
-    height: 100%;
-    font-family: "Garet", sans-serif;
-    font-weight: 800; /* Garet Heavy */
-  }
   
   /* Navigation Links */
   .nav-links {
@@ -89,10 +62,13 @@ body {
     @apply font-medium text-primary-dark;
   }
   
-  /* Decorative Circle */
   .decorative-circle {
-    @apply absolute top-[-51px] left-[265px];
-  }
+    @apply absolute top-[-10px] left-[400px] z-[50];
+    opacity: 1;
+   }
+  
+  
+
   
 /* Guide Section */
 

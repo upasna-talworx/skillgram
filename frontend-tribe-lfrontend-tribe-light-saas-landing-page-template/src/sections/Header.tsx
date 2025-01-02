@@ -1,14 +1,13 @@
 import Image from "next/image";
+import SGLogo from "@/assets/Skillgram Logo.svg"; // Path to your logo as an SVG component
+import Circleeffect from "@/assets/Circle.svg";
 
 // Data for Navigation Links
 const navLinks = ["Guide", "Features", "Services", "Login", "Demo"];
 
 const Logo = () => (
   <div className="logo">
-    <div className="logo-skill">
-      <span className="logo-skill-text">SKILL</span>
-    </div>
-    <div className="logo-gram">GRAM</div>
+    <SGLogo className="logo-image" />
   </div>
 );
 
@@ -29,9 +28,9 @@ const BookDemoButton = () => (
 );
 
 export const Header = () => (
-  <header className="header">
+  <header className="header relative">
     <div className="header-bg">
-      <nav className="navbar">
+      <nav className="navbar flex items-center justify-between px-6 relative z-10">
         <Logo />
         <NavLinks />
         <BookDemoButton />
@@ -39,8 +38,8 @@ export const Header = () => (
     </div>
 
     {/* Decorative Circle */}
-    <div className="decorative-circle">
-      <Image src="/assets/Circle.svg" alt="Decorative Circle" width={147} height={143} />
+    <div className="decorative-circle absolute top-[-40px] left-[50px]">
+      <Circleeffect width={147} height={143} />
     </div>
   </header>
 );
